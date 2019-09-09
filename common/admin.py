@@ -1,3 +1,7 @@
 from django.contrib import admin
 
-# Register your models here.
+from common.models import Review
+
+class ReviewAdmin(admin.ModelAdmin):
+    readonly_fields = ('sentiment_analysis',)
+admin.site.register(Review, ReviewAdmin)
