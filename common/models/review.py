@@ -12,3 +12,5 @@ class Review(BaseModel, models.Model):
     rating_max          = models.PositiveSmallIntegerField(blank=True, null=True, help_text=_('The max possible review rating, if it was included'))
     analytics_id        = models.UUIDField(blank=True, null=True, help_text=_(f'The document id from the documents service ({settings.DOCUMENT_SERVICE_BASE_URL})'))
     sentiment_analysis  = JSONField(blank=True, null=True, help_text=_('The sentiment analysis from the document service'))
+    created_at          = models.DateTimeField(auto_now_add=True, editable=False)
+    updated_at          = models.DateTimeField(auto_now=True, editable=False)
