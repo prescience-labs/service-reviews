@@ -13,6 +13,7 @@ from common.models import BaseModel
 class ReviewRequest(BaseModel, models.Model):
     target_customer_email   = models.CharField(max_length=500, blank=True, null=True)
     target_customer_phone   = models.CharField(max_length=50, blank=True, null=True)
+    product_name            = models.CharField(max_length=500)
     is_thumbs_up            = models.BooleanField(blank=True, null=True)
     review_text             = models.TextField(blank=True, null=True)
     review_completed_at     = models.DateTimeField(blank=True, null=True)

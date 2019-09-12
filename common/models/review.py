@@ -10,7 +10,7 @@ class Review(BaseModel, models.Model):
     source              = models.CharField(max_length=255, help_text=_('The source of the review (e.g. Google, Shopify, Amazon)'))
     rating              = models.PositiveSmallIntegerField(blank=True, null=True, help_text=_('The review rating, if it was included'))
     rating_max          = models.PositiveSmallIntegerField(blank=True, null=True, help_text=_('The max possible review rating, if it was included'))
-    analytics_id        = models.UUIDField(blank=True, null=True, help_text=_(f'The document id from the <a href="{settings.DOCUMENT_SERVICE_BASE_URL}">Documents Service</a>'))
+    analytics_id        = models.UUIDField(blank=True, null=True, help_text=_(f'The document id from the <a href="{settings.DOCUMENTS_SERVICE["BASE_URL"]}">Documents Service</a>'))
     sentiment_analysis  = JSONField(blank=True, null=True, help_text=_('The sentiment analysis from the document service'))
     created_at          = models.DateTimeField(auto_now_add=True, editable=False)
     updated_at          = models.DateTimeField(auto_now=True, editable=False)

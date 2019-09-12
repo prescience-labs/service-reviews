@@ -154,4 +154,11 @@ SWAGGER_SETTINGS = {
 }
 
 # Other services
-DOCUMENT_SERVICE_BASE_URL = os.getenv('DOCUMENT_SERVICE_BASE_URL')
+DOCUMENTS_SERVICE = {
+    'BASE_URL': os.getenv('DOCUMENTS_SERVICE_BASE_URL'),
+}
+MAILER_SERVICE = {
+    'BASE_URL':             os.getenv('MAILER_SERVICE_BASE_URL'),
+    'FROM_EMAIL':           os.getenv('MAILER_SERVICE_FROM_EMAIL', 'postmaster@mg.altamir.io'),
+    'DEFAULT_DELAY_DAYS':   int(os.getenv('MAILER_SERVICE_DEFAULT_DELAY_DAYS', 7)),
+}

@@ -9,6 +9,7 @@ class ReviewRequestSerializer(serializers.ModelSerializer):
             'id',
             'target_customer_email',
             'target_customer_phone',
+            'product_name',
             'is_thumbs_up',
             'review_text',
             'review_completed_at',
