@@ -26,6 +26,6 @@ class ReviewRequestList(generics.ListCreateAPIView):
 
         return result
 
-class ReviewRequestDetail(generics.RetrieveAPIView):
+class ReviewRequestDetail(generics.RetrieveUpdateAPIView):
     queryset            = ReviewRequest.objects.all()
     serializer_class    = ReviewRequestSerializer
