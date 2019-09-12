@@ -7,5 +7,5 @@ class ReviewAdmin(admin.ModelAdmin):
 admin.site.register(Review, ReviewAdmin)
 
 class ReviewRequestAdmin(admin.ModelAdmin):
-    readonly_fields = ('review_completed_at', 'created_at', 'updated_at',)
+    readonly_fields = ('created_at', 'updated_at',)
 admin.site.register(ReviewRequest, ReviewRequestAdmin)
