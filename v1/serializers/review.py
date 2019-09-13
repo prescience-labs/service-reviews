@@ -8,7 +8,6 @@ class ReviewSerializer(serializers.ModelSerializer):
         fields              = [
             'id',
             'text',
-            'source',
             'rating',
             'rating_max',
             'sentiment_analysis',
