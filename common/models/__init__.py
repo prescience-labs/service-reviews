@@ -1,3 +1,6 @@
 from .base import BaseModel
-from .review import Review
-from .review_request import ReviewRequest
+from .vendor import Vendor
+from .product import Product # must come after Vendor
+from .inventory import Inventory # must come after Product
+from .transaction import Transaction # must come after Product
+from .review import Review # must come after Transaction
