@@ -28,7 +28,8 @@ class TransactionAdmin(admin.ModelAdmin):
 admin.site.register(Transaction, TransactionAdmin)
 
 class VendorAdmin(admin.ModelAdmin):
-    search_fields   = ('name',)
+    list_filter     = ('integrations_type',)
+    search_fields   = ('name', 'integrations_type', 'integrations_id',)
     readonly_fields = ('created_at', 'updated_at',)
     inlines         = [
         InventoryInline,
