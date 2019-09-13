@@ -4,12 +4,13 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from common.models import BaseModel
-from common.models import Product
+from common.models import Product, Vendor
 
 class Transaction(BaseModel, models.Model):
     customer_email  = models.CharField(max_length=500, blank=True, null=True)
     customer_phone  = models.CharField(max_length=50, blank=True, null=True)
     products        = models.ManyToManyField(Product)
+    vendor          = models.ForeignKey(Vendor, on_delete=models.CASCADE)
     created_at      = models.DateTimeField(auto_now_add=True, editable=False)
     updated_at      = models.DateTimeField(auto_now=True, editable=False)
 

@@ -3,7 +3,7 @@ from rest_framework import serializers
 from common.models import Product, Vendor
 
 class VendorSerializer(serializers.ModelSerializer):
-    products = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    products = serializers.PrimaryKeyRelatedField(many=True, queryset=Product.objects.all())
 
     class Meta:
         model               = Vendor

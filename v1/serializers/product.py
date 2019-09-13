@@ -1,11 +1,11 @@
 from rest_framework import serializers
 
-from common.models import Product
+from common.models import Product, Vendor
 
 class ProductSerializer(serializers.ModelSerializer):
     vendors = serializers.PrimaryKeyRelatedField(
         many=True,
-        read_only=True,
+        queryset=Vendor.objects.all(),
     )
 
     class Meta:
