@@ -6,6 +6,7 @@ class ProductSerializer(serializers.ModelSerializer):
     vendors = serializers.PrimaryKeyRelatedField(
         many=True,
         queryset=Vendor.objects.all(),
+        required=False,
     )
 
     class Meta:

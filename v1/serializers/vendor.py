@@ -10,6 +10,8 @@ class VendorSerializer(serializers.ModelSerializer):
         fields              = [
             'id',
             'name',
+            'integrations_type',
+            'integrations_id',
             'products',
             'created_at',
             'updated_at',
@@ -19,3 +21,4 @@ class VendorSerializer(serializers.ModelSerializer):
             'created_at',
             'updated_at',
         ]
+        filterset_fields = ['integrations_type', 'integrations_id']
