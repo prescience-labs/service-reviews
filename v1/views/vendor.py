@@ -1,7 +1,8 @@
 from rest_framework import generics
+from rest_framework.response import Response
 
-from common.models import Vendor
-from v1.serializers import VendorSerializer
+from common.models import Product, Vendor
+from v1.serializers import ProductSerializer, VendorSerializer, RetrieveVendorProductSerializer
 
 class VendorList(generics.ListCreateAPIView):
     queryset            = Vendor.objects.all()
@@ -11,3 +12,12 @@ class VendorList(generics.ListCreateAPIView):
 class VendorDetail(generics.RetrieveAPIView):
     queryset            = Vendor.objects.all()
     serializer_class    = VendorSerializer
+
+class VendorProductList(generics.ListAPIView):
+    queryset            = Product.objects.all()
+    serializer_class    = ProductSerializer
+
+    def list(self, request, pk):
+        queryset    = Product.objects.filter(vendors__id=pk)
+        serializer  = RetrieveVendorProductSerializer(queryset, many=True, context={'vendor_id': pk})
+        return Response(serializer.data)
