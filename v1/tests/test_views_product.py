@@ -18,3 +18,14 @@ class ProductViewTests(TestCase):
             'results': [],
         }
         self.assertDictEqual(request.data, expected_result)
+
+    def test_post_product(self):
+        """Should add a product and return product data"""
+        test_product_name = 'Test Product 1'
+        request = self.client.post(BASE_URL, {
+            'name': test_product_name,
+        })
+        self.assertTrue('id' in request.data)
+        self.assertEqual(test_product_name, request.data['name'])
+        self.assertTrue('created_at' in request.data)
+        self.assertTrue('updated_at' in request.data)
