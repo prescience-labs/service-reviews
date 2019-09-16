@@ -8,6 +8,7 @@ urlpatterns = [
     path('/reviews/<str:pk>', views.ReviewDetail.as_view(), name='review_detail'),
     path('/transactions', views.TransactionList.as_view(), name='transaction_list'),
     path('/transactions/<str:pk>', views.TransactionDetail.as_view(), name='transaction_detail'),
+    path('/transactions/<str:pk>/products', views.TransactionProductList.as_view(), name='transaction_product_list'),
     path('/vendors', views.VendorList.as_view(), name='vendor_list'),
     path('/vendors/<str:pk>', views.VendorDetail.as_view(), name='vendor_detail'),
     path('/vendors/<str:pk>/products', views.VendorProductList.as_view(), name='vendor_product_list'),

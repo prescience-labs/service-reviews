@@ -1,13 +1,8 @@
 from rest_framework import serializers
 
-from common.models import Transaction
+from common.models import Product, Transaction
 
 class TransactionSerializer(serializers.ModelSerializer):
-    products = serializers.PrimaryKeyRelatedField(
-        many=True,
-        read_only=True,
-    )
-
     class Meta:
         model               = Transaction
         fields              = [
@@ -15,7 +10,20 @@ class TransactionSerializer(serializers.ModelSerializer):
             'vendor',
             'customer_email',
             'customer_phone',
-            'products',
+            'created_at',
+            'updated_at',
+        ]
+        read_only_fields    = [
+            'id',
+            'created_at',
+            'updated_at',
+        ]
+class TransactionProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model               = Product
+        fields              = [
+            'id',
+            'name',
             'created_at',
             'updated_at',
         ]
