@@ -4,6 +4,7 @@ from v1 import views
 urlpatterns = [
     path('/products', views.ProductList.as_view(), name='product_list'),
     path('/products/<str:pk>', views.ProductDetail.as_view(), name='product_detail'),
+    path('/products/<str:pk>/vendors', views.ProductVendorList.as_view(), name='product_vendor_list'),
     path('/reviews', views.ReviewList.as_view(), name='review_list'),
     path('/reviews/<str:pk>', views.ReviewDetail.as_view(), name='review_detail'),
     path('/transactions', views.TransactionList.as_view(), name='transaction_list'),
