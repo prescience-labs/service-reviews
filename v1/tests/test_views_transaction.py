@@ -95,7 +95,7 @@ class CreateTransactionComprehensiveViewTests(TestCase):
         self.assertEqual(request.status_code, 201)
 
     def test_post_transaction_comprehensive_without_customer_information(self):
-        """Should return a 400"""
+        """Should return a 400 and contain relevant and helpful text"""
         request = self.client.post(BASE_URL + '/comprehensive', {
             'customer_email': '',
             'customer_phone': '',
@@ -105,4 +105,44 @@ class CreateTransactionComprehensiveViewTests(TestCase):
                 self.vendor_product_id,
             ],
         })
-        self.assertEqual(request.status_code, 400)
+        self.assertContains(request, 'customer_email', status_code=400)
+        self.assertContains(request, 'customer_phone', status_code=400)
+
+    def test_post_transaction_comprehensive_without_vendor_integrations_type(self):
+        """Should return a 400 and contain relevant and helpful text"""
+        request = self.client.post(BASE_URL + '/comprehensive', {
+            'customer_email': self.customer_email,
+            'customer_phone': self.customer_phone,
+            # 'vendor_integrations_type': self.vendor_integrations_type,
+            'vendor_integrations_id': self.vendor_integrations_id,
+            'vendor_product_ids': [
+                self.vendor_product_id,
+            ],
+        })
+        self.assertContains(request, 'vendor_integrations_type', status_code=400)
+
+    def test_post_transaction_comprehensive_without_vendor_integrations_id(self):
+        """Should return a 400 and contain relevant and helpful text"""
+        request = self.client.post(BASE_URL + '/comprehensive', {
+            'customer_email': self.customer_email,
+            'customer_phone': self.customer_phone,
+            'vendor_integrations_type': self.vendor_integrations_type,
+            # 'vendor_integrations_id': self.vendor_integrations_id,
+            'vendor_product_ids': [
+                self.vendor_product_id,
+            ],
+        })
+        self.assertContains(request, 'vendor_integrations_id', status_code=400)
+
+    def test_post_transaction_comprehensive_without_vendor_product_ids(self):
+        """Should return a 400 and contain relevant and helpful text"""
+        request = self.client.post(BASE_URL + '/comprehensive', {
+            'customer_email': self.customer_email,
+            'customer_phone': self.customer_phone,
+            'vendor_integrations_type': self.vendor_integrations_type,
+            'vendor_integrations_id': self.vendor_integrations_id,
+            # 'vendor_product_ids': [
+            #     self.vendor_product_id,
+            # ],
+        })
+        self.assertContains(request, 'vendor_product_ids', status_code=400)
