@@ -5,7 +5,7 @@ from rest_framework.test import APIClient
 
 BASE_URL = '/v1/vendors'
 
-class VendorViewTests(TestCase):
+class VendorListViewTests(TestCase):
     def __init__(self, *args, **kwargs):
         self.client = APIClient()
         super().__init__(*args, **kwargs)

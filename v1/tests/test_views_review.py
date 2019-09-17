@@ -3,7 +3,7 @@ from rest_framework.test import APIClient
 
 BASE_URL = '/v1/reviews'
 
-class ReviewViewTests(TestCase):
+class ReviewListViewTests(TestCase):
     def __init__(self, *args, **kwargs):
         self.client = APIClient()
         super().__init__(*args, **kwargs)
