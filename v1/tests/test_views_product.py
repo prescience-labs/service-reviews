@@ -29,3 +29,11 @@ class ProductListViewTests(TestCase):
         self.assertEqual(test_product_name, request.data['name'])
         self.assertTrue('created_at' in request.data)
         self.assertTrue('updated_at' in request.data)
+
+    def test_post_product_no_name(self):
+        """Should return a clean 400 error"""
+        test_product_name = ''
+        request = self.client.post(BASE_URL, {
+            'name': test_product_name,
+        })
+        self.assertEqual(request.status_code, 400)
