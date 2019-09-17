@@ -31,6 +31,55 @@ class VendorListViewTests(TestCase):
             'integrations_type': test_vendor_integrations_type,
             'integrations_id': test_vendor_integrations_id,
         })
+        self.assertEqual(request.status_code, 201)
+        self.assertTrue('id' in request.data)
+        self.assertEqual(test_vendor_name, request.data['name'])
+        self.assertEqual(test_vendor_integrations_type, request.data['integrations_type'])
+        self.assertEqual(test_vendor_integrations_id, request.data['integrations_id'])
+        self.assertTrue('created_at' in request.data)
+        self.assertTrue('updated_at' in request.data)
+
+    def test_post_vendor_no_name(self):
+        """Should return a clean 400 error"""
+        test_vendor_name                = ''
+        test_vendor_integrations_type   = 'test_type'
+        test_vendor_integrations_id     = str(uuid4())
+        request = self.client.post(BASE_URL, {
+            'name': test_vendor_name,
+            'integrations_type': test_vendor_integrations_type,
+            'integrations_id': test_vendor_integrations_id,
+        })
+        self.assertEqual(request.status_code, 400)
+
+    def test_post_vendor_no_integrations_type(self):
+        """Should still create the object with a 201"""
+        test_vendor_name                = 'Test Vendor'
+        test_vendor_integrations_type   = ''
+        test_vendor_integrations_id     = str(uuid4())
+        request = self.client.post(BASE_URL, {
+            'name': test_vendor_name,
+            'integrations_type': test_vendor_integrations_type,
+            'integrations_id': test_vendor_integrations_id,
+        })
+        self.assertEqual(request.status_code, 201)
+        self.assertTrue('id' in request.data)
+        self.assertEqual(test_vendor_name, request.data['name'])
+        self.assertEqual(test_vendor_integrations_type, request.data['integrations_type'])
+        self.assertEqual(test_vendor_integrations_id, request.data['integrations_id'])
+        self.assertTrue('created_at' in request.data)
+        self.assertTrue('updated_at' in request.data)
+
+    def test_post_vendor_no_integrations_id(self):
+        """Should still create the object with a 201"""
+        test_vendor_name                = 'Test Vendor'
+        test_vendor_integrations_type   = 'test_type'
+        test_vendor_integrations_id     = ''
+        request = self.client.post(BASE_URL, {
+            'name': test_vendor_name,
+            'integrations_type': test_vendor_integrations_type,
+            'integrations_id': test_vendor_integrations_id,
+        })
+        self.assertEqual(request.status_code, 201)
         self.assertTrue('id' in request.data)
         self.assertEqual(test_vendor_name, request.data['name'])
         self.assertEqual(test_vendor_integrations_type, request.data['integrations_type'])
