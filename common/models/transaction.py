@@ -19,8 +19,12 @@ class Transaction(BaseModel, models.Model):
         return self.customer_email if self.customer_email else self.customer_phone
 
     def clean(self):
-        if self.customer_email is None and self.customer_phone is None:
+        if not self.customer_email and not self.customer_phone:
             raise ValidationError('At least one of `customer_email` and `customer_phone` must be set.')
+
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        self.full_clean()
+        return super().save(force_insert=force_insert, force_update=force_update, using=using, update_fields=update_fields)
 
     def __str__(self):
         return f'[{str(self.created_at)[:19]}] {self.customer_contact}'

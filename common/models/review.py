@@ -34,3 +34,7 @@ class Review(BaseModel, models.Model):
         if self.transaction is not None and self.product is not None:
             if self.product not in self.transaction.products.all():
                 raise ValidationError("That Product isn't on that Transaction")
+
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        self.full_clean()
+        return super().save(force_insert=force_insert, force_update=force_update, using=using, update_fields=update_fields)

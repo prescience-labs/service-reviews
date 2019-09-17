@@ -28,7 +28,6 @@ class VendorProductList(generics.ListCreateAPIView):
         return Response(serializer.data)
 
     def create(self, request, pk):
-        print(request.data)
         serializer  = VendorProductSerializer(data=request.data, context={'vendor_id': pk})
         if serializer.is_valid():
             serializer.save()
