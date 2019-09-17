@@ -70,16 +70,24 @@ class CreateTransactionComprehensiveSerializer(serializers.ModelSerializer):
             if not self.validated_data.get('customer_phone', None) and not self.validated_data.get('customer_email', None):
                 raise serializers.ValidationError('At least one of `customer_phone` and `customer_email` must have a value.')
 
-            vendor = Vendor.objects.get(
+            vendor = Vendor.objects.get_or_none(
                 integrations_type=self.validated_data.get('vendor_integrations_type', None),
                 integrations_id=self.validated_data.get('vendor_integrations_id', None),
             )
+            if not vendor:
+                raise serializers.ValidationError(f"A vendor with `integrations_type` of `{self.validated_data.get('vendor_integrations_type', 'MISSING')}` and `integrations_id` of `{self.validated_data.get('vendor_integrations_id', 'MISSING')}` could not be found.")
+
             products = []
             for product_id in self.validated_data.get('vendor_product_ids', []):
-                products.append(Product.objects.get(
+                product = Product.objects.get_or_none(
                     inventory__vendor_product_id=product_id,
                     inventory__vendor=vendor,
-                ))
+                )
+                if not product:
+                    raise serializers.ValidationError(f"A product with `vendor_product_id` of `{product_id}` under the given vendor could not be found.")
+                products.append(product)
+
+
             transaction = Transaction.objects.create(
                 vendor=vendor,
                 customer_email=self.validated_data.get('customer_email', None),
