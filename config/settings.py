@@ -3,11 +3,22 @@ import logging.config
 import os
 
 import dj_database_url
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
 
 from dotenv import find_dotenv, load_dotenv
 load_dotenv(find_dotenv())
 
-ENVIRONMENT                 = os.getenv('ENVIRONMENT', 'development')
+ENVIRONMENT = os.getenv('ENVIRONMENT', 'development')
+SENTRY_DSN  = os.getenv('SENTRY_DSN')
+if SENTRY_DSN is not None and ENVIRONMENT is not 'development' and ENVIRONMENT is not 'test':
+    sentry_sdk.init(
+        dsn=SENTRY_DSN,
+        integrations=[DjangoIntegration()],
+        environment=ENVIRONMENT,
+    )
+    print('Sentry logging initialized')
+
 BASE_DIR                    = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY                  = os.getenv('SECRET_KEY')
 DEBUG                       = os.getenv('DEBUG', 'false').lower() == 'true'
