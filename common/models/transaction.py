@@ -7,12 +7,13 @@ from common.models import BaseModel
 from common.models import Product, Vendor
 
 class Transaction(BaseModel, models.Model):
-    vendor          = models.ForeignKey(Vendor, on_delete=models.CASCADE)
-    customer_email  = models.CharField(max_length=500, blank=True, null=True)
-    customer_phone  = models.CharField(max_length=50, blank=True, null=True)
-    products        = models.ManyToManyField(Product)
-    created_at      = models.DateTimeField(auto_now_add=True, editable=False)
-    updated_at      = models.DateTimeField(auto_now=True, editable=False)
+    vendor                  = models.ForeignKey(Vendor, on_delete=models.CASCADE)
+    products                = models.ManyToManyField(Product)
+    customer_email          = models.CharField(max_length=500, blank=True, null=True)
+    customer_phone          = models.CharField(max_length=50, blank=True, null=True)
+    review_requests_sent    = models.PositiveSmallIntegerField(default=0, help_text=_("The number of review requests we've sent to the customer regarding this transaction"))
+    created_at              = models.DateTimeField(auto_now_add=True, editable=False)
+    updated_at              = models.DateTimeField(auto_now=True, editable=False)
 
     @property
     def customer_contact(self):
