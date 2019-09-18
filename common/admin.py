@@ -18,7 +18,7 @@ class ReviewAdmin(admin.ModelAdmin):
     list_display    = ('created_at', 'vendor', 'transaction', 'product',)
     list_filter     = ('created_at',)
     search_fields   = ('id', 'vendor__name', 'transaction__customer_email', 'transaction__customer_phone', 'product__name',)
-    readonly_fields = ('id', 'sentiment_analysis', 'created_at', 'updated_at',)
+    readonly_fields = ('id', 'analytics_id', 'sentiment_analysis', 'created_at', 'updated_at',)
 admin.site.register(Review, ReviewAdmin)
 
 class TransactionAdmin(admin.ModelAdmin):
