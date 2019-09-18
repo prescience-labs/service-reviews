@@ -72,6 +72,14 @@ TEMPLATES = [
     },
 ]
 
+# Admin site
+# https://docs.djangoproject.com/en/2.2/ref/contrib/admin/#adminsite-attributes
+ADMIN_SITE = {
+    'site_title': 'Reviews admin',
+    'site_header': 'Reviews administration',
+    'index_title': 'Reviews administration',
+}
+
 WSGI_APPLICATION = 'config.wsgi.application'
 
 # Database
