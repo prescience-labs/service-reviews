@@ -7,7 +7,7 @@ import dj_database_url
 from dotenv import find_dotenv, load_dotenv
 load_dotenv(find_dotenv())
 
-
+ENVIRONMENT                 = os.getenv('ENVIRONMENT', 'development')
 BASE_DIR                    = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY                  = os.getenv('SECRET_KEY')
 DEBUG                       = os.getenv('DEBUG', 'false').lower() == 'true'
