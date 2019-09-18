@@ -180,5 +180,5 @@ DOCUMENTS_SERVICE = {
 MAILER_SERVICE = {
     'BASE_URL':             os.getenv('MAILER_SERVICE_BASE_URL'),
     'FROM_EMAIL':           os.getenv('MAILER_SERVICE_FROM_EMAIL', 'postmaster@mg.altamir.io'),
-    'DEFAULT_DELAY_DAYS':   int(os.getenv('MAILER_SERVICE_DEFAULT_DELAY_DAYS', 7)),
+    'DEFAULT_DELAY_DAYS':   int(os.getenv('MAILER_SERVICE_DEFAULT_DELAY_DAYS', 0 if DEBUG else 7)),
 }
