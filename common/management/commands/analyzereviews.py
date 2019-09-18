@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
+from django.db.models import Q
 import requests
 
 from common.models import Review
@@ -8,7 +9,10 @@ class Command(BaseCommand):
     help = "Gets sentiment analysis for all reviews without the sentiment_analysis field set"
 
     def handle(self, *args, **options):
-        reviews = Review.objects.filter(sentiment_analysis__isnull=True)
+        reviews = Review.objects.filter(
+            Q(sentiment_analysis__isnull=True)
+            | Q(analytics_id__isnull=True)
+        )
         if len(reviews) is 0:
             self.stdout.write(self.style.NOTICE('No reviews were found with the given criteria'))
         for r in reviews:
