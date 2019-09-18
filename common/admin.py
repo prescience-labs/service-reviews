@@ -21,9 +21,9 @@ class ReviewAdmin(admin.ModelAdmin):
 admin.site.register(Review, ReviewAdmin)
 
 class TransactionAdmin(admin.ModelAdmin):
-    list_display        = ('created_at', 'customer_contact',)
+    list_display        = ('created_at', 'customer_contact', 'vendor',)
     list_filter         = ('review_requests_sent',)
-    search_fields       = ('id', 'customer_email', 'customer_phone', 'products__name',)
+    search_fields       = ('id', 'customer_email', 'customer_phone', 'products__name', 'vendor__id', 'vendor__name',)
     readonly_fields     = ('id', 'review_requests_sent', 'created_at', 'updated_at',)
     filter_horizontal   = ('products',)
 admin.site.register(Transaction, TransactionAdmin)
