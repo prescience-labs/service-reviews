@@ -2,9 +2,10 @@ from django.conf import settings
 from django.contrib.postgres.fields import JSONField
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.db.models import ObjectDoesNotExist
 from django.utils.translation import gettext_lazy as _
 
-from common.models import BaseModel, Product, Transaction, Vendor
+from common.models import BaseModel, Inventory, Product, Transaction, Vendor
 
 class Review(BaseModel, models.Model):
     """
@@ -34,6 +35,13 @@ class Review(BaseModel, models.Model):
         if self.transaction is not None and self.product is not None:
             if self.product not in self.transaction.products.all():
                 raise ValidationError("That Product isn't on that Transaction")
+
+        # Check that the product (if provided) can be tied to the vendor
+        if self.product is not None:
+            try:
+                inventory = Inventory.objects.get(vendor=self.vendor, product=self.product)
+            except ObjectDoesNotExist:
+                raise ValidationError(f"Vendor {self.vendor} doesn't have product {self.product} in inventory")
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         self.full_clean()

@@ -1,10 +1,11 @@
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.db.models import ObjectDoesNotExist
 from django.utils.translation import gettext_lazy as _
 
 from common.models import BaseModel
-from common.models import Product, Vendor
+from common.models import Inventory, Product, Vendor
 
 class Transaction(BaseModel, models.Model):
     vendor                  = models.ForeignKey(Vendor, on_delete=models.CASCADE)
@@ -22,6 +23,12 @@ class Transaction(BaseModel, models.Model):
     def clean(self):
         if not self.customer_email and not self.customer_phone:
             raise ValidationError('At least one of `customer_email` and `customer_phone` must be set.')
+
+        for p in self.products.all():
+            try:
+                inventory = Inventory.objects.get(vendor=self.vendor, product=p)
+            except ObjectDoesNotExist:
+                raise ValidationError(f"Vendor {self.vendor.name} doesn't have product {p} in inventory")
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         self.full_clean()

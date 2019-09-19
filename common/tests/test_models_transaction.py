@@ -23,4 +23,5 @@ class TransactionModelTests(TestCase):
 
     def test_products_belong_to_vendor(self):
         """Should raise exception if trying to add a transaction with a product that isn't related to the vendor"""
+        self.assertTrue(False)
         pass
