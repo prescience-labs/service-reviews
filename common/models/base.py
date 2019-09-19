@@ -1,7 +1,7 @@
 import uuid
 from django.db import models
 
-from .managers import GetOrNoneManager
+from ._managers import GetOrNoneManager
 
 class BaseModel(models.Model):
     """The base model from which all other models inherit."""
