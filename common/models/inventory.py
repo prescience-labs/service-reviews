@@ -10,9 +10,9 @@ class Inventory(BaseModel, models.Model):
     multiple vendors. That relationship has additional information, such
     as the vendor-specific product ID.
     """
-    vendor_product_id   = models.CharField(max_length=255, help_text=_('The vendor-specific product ID'))
-    product             = models.ForeignKey(Product, on_delete=models.CASCADE)
     vendor              = models.ForeignKey(Vendor, on_delete=models.CASCADE)
+    product             = models.ForeignKey(Product, on_delete=models.CASCADE)
+    vendor_product_id   = models.CharField(max_length=255, help_text=_('The vendor-specific product ID'))
     created_at          = models.DateTimeField(auto_now_add=True, editable=False)
     updated_at          = models.DateTimeField(auto_now=True, editable=False)
 
