@@ -2,6 +2,8 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import ObjectDoesNotExist
+from django.db.models.signals import m2m_changed
+from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as _
 
 from common.models import BaseModel
@@ -24,15 +26,17 @@ class Transaction(BaseModel, models.Model):
         if not self.customer_email and not self.customer_phone:
             raise ValidationError('At least one of `customer_email` and `customer_phone` must be set.')
 
-        for p in self.products.all():
-            try:
-                inventory = Inventory.objects.get(vendor=self.vendor, product=p)
-            except ObjectDoesNotExist:
-                raise ValidationError(f"Vendor {self.vendor.name} doesn't have product {p} in inventory")
-
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         self.full_clean()
         return super().save(force_insert=force_insert, force_update=force_update, using=using, update_fields=update_fields)
 
     def __str__(self):
         return f'[{str(self.created_at)[:19]}] {self.customer_contact}'
+
+@receiver(m2m_changed, sender=Transaction.products.through)
+def validate_vendor_product_relationship(sender, instance, **kwargs):
+    for p in instance.products.all():
+        try:
+            inventory = Inventory.objects.get(vendor=instance.vendor, product=p)
+        except ObjectDoesNotExist:
+            raise Exception(f"Vendor {instance.vendor.name} doesn't have product {p} in inventory")
