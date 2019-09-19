@@ -39,4 +39,4 @@ def validate_vendor_product_relationship(sender, instance, **kwargs):
         try:
             inventory = Inventory.objects.get(vendor=instance.vendor, product=p)
         except ObjectDoesNotExist:
-            raise Exception(f"Vendor {instance.vendor.name} doesn't have product {p} in inventory")
+            raise ValidationError(f"Vendor {instance.vendor.name} doesn't have product {p} in inventory")

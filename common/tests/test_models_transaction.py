@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.test import TestCase
 
 from common.models import Inventory, Product, Transaction, Vendor
@@ -23,5 +24,11 @@ class TransactionModelTests(TestCase):
 
     def test_products_belong_to_vendor(self):
         """Should raise exception if trying to add a transaction with a product that isn't related to the vendor"""
-        self.assertTrue(False)
-        pass
+        product2    = Product.objects.create(name='Unrelated Product')
+        transaction = Transaction.objects.create(
+            vendor=self.vendor,
+            customer_email=self.customer_email,
+            customer_phone=self.customer_phone,
+        )
+        with self.assertRaises(ValidationError):
+            transaction.products.add(product2)
