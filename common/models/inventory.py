@@ -16,5 +16,14 @@ class Inventory(BaseModel, models.Model):
     created_at          = models.DateTimeField(auto_now_add=True, editable=False)
     updated_at          = models.DateTimeField(auto_now=True, editable=False)
 
+    class Meta:
+        unique_together = [
+            # each vendor_product_id should be unique within the scope of that vendor
+            ['vendor', 'vendor_product_id'],
+
+            # each product-vendor relationship should be represented at most once
+            ['vendor', 'product'],
+        ]
+
     def __str__(self):
         return f'{self.vendor.name}: {self.product.name} (ID: {self.vendor_product_id})'
