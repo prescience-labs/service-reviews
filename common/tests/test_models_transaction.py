@@ -20,3 +20,7 @@ class TransactionModelTests(TestCase):
         transaction.products.add(self.product)
         self.assertIsInstance(transaction, Transaction)
         self.assertIn(self.product, transaction.products.all())
+
+    def test_products_belong_to_vendor(self):
+        """Should raise exception if trying to add a transaction with a product that isn't related to the vendor"""
+        pass
