@@ -207,3 +207,18 @@ class CreateTransactionComprehensiveViewTests(TestCase):
             ],
         })
         self.assertContains(request, 'vendor_product_id', status_code=400)
+
+    def test_post_transaction_fails_when_vendor_doesnt_have_product_in_inventory(self):
+        """Should return a 400 and contain relevant and helpful text"""
+        product_name        = 'Unrelated Product'
+        unrelated_product   = Product.objects.create(name=product_name)
+        request             = self.client.post(BASE_URL, {
+            'customer_email': self.customer_email,
+            'customer_phone': self.customer_phone,
+            'vendor': self.vendor.id,
+            'products': [
+                unrelated_product.id,
+            ],
+        })
+        self.assertContains(request, self.vendor.name, status_code=400)
+        self.assertContains(request, product_name, status_code=400)

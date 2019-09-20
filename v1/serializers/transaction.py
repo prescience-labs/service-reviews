@@ -11,6 +11,7 @@ class TransactionSerializer(serializers.ModelSerializer):
             'vendor',
             'customer_email',
             'customer_phone',
+            'products',
             'created_at',
             'updated_at',
         ]
@@ -19,6 +20,15 @@ class TransactionSerializer(serializers.ModelSerializer):
             'created_at',
             'updated_at',
         ]
+
+    def create(self, validated_data):
+        try:
+            return super().create(validated_data)
+        except ValidationError as e:
+            message = 'The input was not valid. Please check your input and try again.'
+            if type(e.messages) is list:
+                message = e.messages[0]
+            raise serializers.ValidationError(message)
 class TransactionProductSerializer(serializers.ModelSerializer):
     class Meta:
         model               = Product
