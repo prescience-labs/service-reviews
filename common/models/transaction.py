@@ -11,6 +11,7 @@ from common.models import Inventory, Product, Vendor
 
 class Transaction(BaseModel, models.Model):
     vendor                  = models.ForeignKey(Vendor, on_delete=models.CASCADE)
+    vendor_transaction_id   = models.CharField(max_length=1000, help_text=_("The vendor's unique identifier for this transaction"))
     products                = models.ManyToManyField(Product)
     customer_email          = models.CharField(max_length=500, blank=True, null=True)
     customer_phone          = models.CharField(max_length=50, blank=True, null=True)
@@ -32,6 +33,11 @@ class Transaction(BaseModel, models.Model):
 
     def __str__(self):
         return f'[{str(self.created_at)[:19]}] {self.customer_contact}'
+
+    class Meta:
+        unique_together = [
+            ['vendor', 'vendor_transaction_id',]
+        ]
 
 @receiver(m2m_changed, sender=Transaction.products.through)
 def validate_vendor_product_relationship(sender, instance, **kwargs):

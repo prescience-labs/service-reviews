@@ -9,6 +9,7 @@ class TransactionSerializer(serializers.ModelSerializer):
         fields              = [
             'id',
             'vendor',
+            'vendor_transaction_id',
             'customer_email',
             'customer_phone',
             'products',
@@ -44,7 +45,7 @@ class TransactionProductSerializer(serializers.ModelSerializer):
             'updated_at',
         ]
 
-class CreateTransactionComprehensiveSerializer(serializers.ModelSerializer):
+class UpsertTransactionComprehensiveSerializer(serializers.ModelSerializer):
     """Allows creating a transaction without knowledge of product or vendor IDs"""
     customer_email              = serializers.EmailField(required=False)
     vendor_integrations_type    = serializers.CharField(write_only=True)
@@ -60,6 +61,7 @@ class CreateTransactionComprehensiveSerializer(serializers.ModelSerializer):
         fields              = [
             'id',
             'vendor',
+            'vendor_transaction_id',
             'customer_email',
             'customer_phone',
             'created_at',
@@ -97,12 +99,20 @@ class CreateTransactionComprehensiveSerializer(serializers.ModelSerializer):
                     raise serializers.ValidationError(f"A product with `vendor_product_id` of `{product_id}` under the given vendor could not be found.")
                 products.append(product)
 
-
-            transaction = Transaction.objects.create(
-                vendor=vendor,
-                customer_email=self.validated_data.get('customer_email', None),
-                customer_phone=self.validated_data.get('customer_phone', None),
+            transaction = Transaction.objects.update_or_create(
+                vendor__id=vendor.id,
+                vendor_transaction_id=self.validated_data.get('vendor_transaction_id', None),
+                defaults={
+                    'vendor': vendor,
+                    'vendor_transaction_id': self.validated_data.get('vendor_transaction_id', None),
+                    'customer_email': self.validated_data.get('customer_email', None),
+                    'customer_phone': self.validated_data.get('customer_phone', None),
+                },
             )
+            # update_or_create returns a tuple of (transaction, created=True/False)
+            created = transaction[1]
+            transaction = transaction[0]
+
             for p in products:
                 transaction.products.add(p)
             return transaction

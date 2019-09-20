@@ -19,7 +19,6 @@ class Command(BaseCommand):
             response = requests.post(settings.DOCUMENTS_SERVICE['BASE_URL'] + '/documents', data={
                 'text': r.text,
             })
-            print(response.json())
             data                    = response.json()
             r.sentiment_analysis    = data['sentiment_analysis']
             r.analytics_id          = data['id']
