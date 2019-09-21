@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 import logging
 
 from django.conf import settings
+from django.template.loader import render_to_string
 import requests
 
 logger = logging.getLogger(__name__)
@@ -19,15 +20,18 @@ class Email:
         self.subject    = subject
         self.content    = content
 
-    def send_review_request(self, product_name):
+    def send_review_request(self, vendor_name, product_name=None, transaction_id=None):
         """Send an opinionated review request email
 
         Args:
             product_name (string): The name of the product for the review request.
         """
-        email_delay_days    = 7
-        self.subject        = f'Tell us about your order of {product_name}'
-        self.content        = f"Thanks for purchasing {product_name}! Let us know what you thought: CLICK HERE"
+        email_delay_days    = settings.MAILER_SERVICE['DEFAULT_DELAY_DAYS']
+        self.subject        = f'Tell us about your order from {vendor_name}'
+        self.content        = render_to_string('common/email_review_request.html', context={
+            'vendor_name': vendor_name,
+            'review_request_link': f'https://app.dataintel.ai/{transaction_id}' if transaction_id else 'https://app.dataintel.ai',
+        })
 
         post_url    = f'{settings.MAILER_SERVICE["BASE_URL"]}/mailer/schedule'
         post_data   = {

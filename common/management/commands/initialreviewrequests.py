@@ -5,6 +5,7 @@ from django.core.management.base import BaseCommand, CommandError
 import requests
 
 from common.models import Transaction
+from common.services.email import Email
 
 class Command(BaseCommand):
     help = "Sends the first review request for all transactions that haven't sent a review request"
@@ -16,13 +17,8 @@ class Command(BaseCommand):
         for t in transactions:
             try:
                 # send email
-                response = requests.post(settings.MAILER_SERVICE['BASE_URL'], data={
-                    'messageData': 'You have a new review to write!',
-                    'recipientAddress': t.customer_email,
-                    'originAddress': settings.MAILER_SERVICE['FROM_EMAIL'],
-                    'subject': f'Leave a review for your recent order at {t.vendor.name}',
-                    'scheduledSendDate': datetime.now() + timedelta(days=settings.MAILER_SERVICE['DEFAULT_DELAY_DAYS']),
-                })
+                email = Email(t.customer_email)
+                email.send_review_request(t.vendor.name, transaction_id=t.id)
 
                 # increment review_requests_sent
                 t.review_requests_sent += 1
