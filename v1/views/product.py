@@ -13,7 +13,7 @@ class ProductList(generics.ListCreateAPIView):
     queryset            = Product.objects.all()
     serializer_class    = ProductSerializer
 
-class ProductDetail(generics.RetrieveAPIView):
+class ProductDetail(generics.RetrieveUpdateAPIView):
     queryset            = Product.objects.all()
     serializer_class    = ProductSerializer
 
