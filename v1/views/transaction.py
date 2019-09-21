@@ -28,17 +28,20 @@ class TransactionProductList(generics.ListAPIView):
         serializer  = TransactionProductSerializer(queryset, many=True, context={'vendor_id': pk})
         return Response(serializer.data)
 
-class UpsertTransactionComprehensive(generics.UpdateAPIView):
+class UpsertTransactionComprehensive(generics.CreateAPIView):
     """Allows creating/updating a transaction without knowledge of product or vendor IDs
+
+    This POST request upserts (update or insert) the transaction.
 
     The user of this route must have knowledge of:
         - `integrations_type`
         - `integrations_id`
         - `vendor_product_id` (one or more)
+        - `vendor_transaction_id`
     """
     serializer_class = UpsertTransactionComprehensiveSerializer
 
-    def put(self, request):
+    def post(self, request):
         serializer  = UpsertTransactionComprehensiveSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()

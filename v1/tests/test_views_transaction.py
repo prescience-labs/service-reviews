@@ -50,9 +50,9 @@ class UpsertTransactionComprehensiveViewTests(TestCase):
                                                                    vendor_product_id=self.vendor_product_id_2,
                                                                    )
 
-    def test_put_transaction_comprehensive_with_all_data(self):
+    def test_post_transaction_comprehensive_with_all_data(self):
         """Should return a 201 Created"""
-        request = self.client.put(BASE_URL + '/comprehensive', {
+        request = self.client.post(BASE_URL + '/comprehensive', {
             'customer_email': self.customer_email,
             'customer_phone': self.customer_phone,
             'vendor_integrations_type': self.vendor_integrations_type,
@@ -64,9 +64,9 @@ class UpsertTransactionComprehensiveViewTests(TestCase):
         })
         self.assertEqual(request.status_code, 201)
 
-    def test_put_transaction_comprehensive_with_multiple_products(self):
+    def test_post_transaction_comprehensive_with_multiple_products(self):
         """Should return a 201 Created"""
-        request = self.client.put(BASE_URL + '/comprehensive', {
+        request = self.client.post(BASE_URL + '/comprehensive', {
             'customer_email': self.customer_email,
             'customer_phone': self.customer_phone,
             'vendor_integrations_type': self.vendor_integrations_type,
@@ -79,9 +79,9 @@ class UpsertTransactionComprehensiveViewTests(TestCase):
         })
         self.assertEqual(request.status_code, 201)
 
-    def test_put_transaction_comprehensive_without_customer_email(self):
+    def test_post_transaction_comprehensive_without_customer_email(self):
         """Should return a 201 Created"""
-        request = self.client.put(BASE_URL + '/comprehensive', {
+        request = self.client.post(BASE_URL + '/comprehensive', {
             'customer_email': '',
             'customer_phone': self.customer_phone,
             'vendor_integrations_type': self.vendor_integrations_type,
@@ -93,9 +93,9 @@ class UpsertTransactionComprehensiveViewTests(TestCase):
         })
         self.assertEqual(request.status_code, 201)
 
-    def test_put_transaction_comprehensive_with_invalid_customer_email(self):
+    def test_post_transaction_comprehensive_with_invalid_customer_email(self):
         """Should return a 400"""
-        request = self.client.put(BASE_URL + '/comprehensive', {
+        request = self.client.post(BASE_URL + '/comprehensive', {
             'customer_email': 'random string that is not random',
             'customer_phone': self.customer_phone,
             'vendor_integrations_type': self.vendor_integrations_type,
@@ -107,9 +107,9 @@ class UpsertTransactionComprehensiveViewTests(TestCase):
         })
         self.assertEqual(request.status_code, 400)
 
-    def test_put_transaction_comprehensive_without_customer_phone(self):
+    def test_post_transaction_comprehensive_without_customer_phone(self):
         """Should return a 201 Created"""
-        request = self.client.put(BASE_URL + '/comprehensive', {
+        request = self.client.post(BASE_URL + '/comprehensive', {
             'customer_email': self.customer_email,
             'customer_phone': '',
             'vendor_integrations_type': self.vendor_integrations_type,
@@ -121,9 +121,9 @@ class UpsertTransactionComprehensiveViewTests(TestCase):
         })
         self.assertEqual(request.status_code, 201)
 
-    def test_put_transaction_comprehensive_without_customer_information(self):
+    def test_post_transaction_comprehensive_without_customer_information(self):
         """Should return a 400 and contain relevant and helpful text"""
-        request = self.client.put(BASE_URL + '/comprehensive', {
+        request = self.client.post(BASE_URL + '/comprehensive', {
             'customer_email': '',
             'customer_phone': '',
             'vendor_integrations_type': self.vendor_integrations_type,
@@ -136,9 +136,9 @@ class UpsertTransactionComprehensiveViewTests(TestCase):
         self.assertContains(request, 'customer_email', status_code=400)
         self.assertContains(request, 'customer_phone', status_code=400)
 
-    def test_put_transaction_comprehensive_without_vendor_integrations_type(self):
+    def test_post_transaction_comprehensive_without_vendor_integrations_type(self):
         """Should return a 400 and contain relevant and helpful text"""
-        request = self.client.put(BASE_URL + '/comprehensive', {
+        request = self.client.post(BASE_URL + '/comprehensive', {
             'customer_email': self.customer_email,
             'customer_phone': self.customer_phone,
             # 'vendor_integrations_type': self.vendor_integrations_type,
@@ -150,9 +150,9 @@ class UpsertTransactionComprehensiveViewTests(TestCase):
         })
         self.assertContains(request, 'vendor_integrations_type', status_code=400)
 
-    def test_put_transaction_comprehensive_without_vendor_integrations_id(self):
+    def test_post_transaction_comprehensive_without_vendor_integrations_id(self):
         """Should return a 400 and contain relevant and helpful text"""
-        request = self.client.put(BASE_URL + '/comprehensive', {
+        request = self.client.post(BASE_URL + '/comprehensive', {
             'customer_email': self.customer_email,
             'customer_phone': self.customer_phone,
             'vendor_integrations_type': self.vendor_integrations_type,
@@ -164,9 +164,9 @@ class UpsertTransactionComprehensiveViewTests(TestCase):
         })
         self.assertContains(request, 'vendor_integrations_id', status_code=400)
 
-    def test_put_transaction_comprehensive_without_vendor_product_ids(self):
+    def test_post_transaction_comprehensive_without_vendor_product_ids(self):
         """Should return a 400 and contain relevant and helpful text"""
-        request = self.client.put(BASE_URL + '/comprehensive', {
+        request = self.client.post(BASE_URL + '/comprehensive', {
             'customer_email': self.customer_email,
             'customer_phone': self.customer_phone,
             'vendor_integrations_type': self.vendor_integrations_type,
@@ -178,9 +178,9 @@ class UpsertTransactionComprehensiveViewTests(TestCase):
         })
         self.assertContains(request, 'vendor_product_ids', status_code=400)
 
-    def test_put_transaction_comprehensive_with_invalid_vendor_integrations_type(self):
+    def test_post_transaction_comprehensive_with_invalid_vendor_integrations_type(self):
         """Should return a 400 and contain relevant and helpful text"""
-        request = self.client.put(BASE_URL + '/comprehensive', {
+        request = self.client.post(BASE_URL + '/comprehensive', {
             'customer_email': self.customer_email,
             'customer_phone': self.customer_phone,
             'vendor_integrations_type': 'invalid_type',
@@ -192,9 +192,9 @@ class UpsertTransactionComprehensiveViewTests(TestCase):
         })
         self.assertContains(request, 'integrations_type', status_code=400)
 
-    def test_put_transaction_comprehensive_with_invalid_vendor_integrations_id(self):
+    def test_post_transaction_comprehensive_with_invalid_vendor_integrations_id(self):
         """Should return a 400 and contain relevant and helpful text"""
-        request = self.client.put(BASE_URL + '/comprehensive', {
+        request = self.client.post(BASE_URL + '/comprehensive', {
             'customer_email': self.customer_email,
             'customer_phone': self.customer_phone,
             'vendor_integrations_type': self.vendor_integrations_type,
@@ -206,9 +206,9 @@ class UpsertTransactionComprehensiveViewTests(TestCase):
         })
         self.assertContains(request, 'integrations_id', status_code=400)
 
-    def test_put_transaction_comprehensive_with_invalid_vendor_product_ids(self):
+    def test_post_transaction_comprehensive_with_invalid_vendor_product_ids(self):
         """Should return a 400 and contain relevant and helpful text"""
-        request = self.client.put(BASE_URL + '/comprehensive', {
+        request = self.client.post(BASE_URL + '/comprehensive', {
             'customer_email': self.customer_email,
             'customer_phone': self.customer_phone,
             'vendor_integrations_type': self.vendor_integrations_type,
