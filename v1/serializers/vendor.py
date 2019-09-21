@@ -40,6 +40,14 @@ class VendorProductSerializer(serializers.ModelSerializer):
         ]
 
     def save(self):
+        """Upserts a product
+
+        Returns a tuple that contains the product itself and a boolean value
+        that is True if the object was created in the database and false if not.
+
+        Returns:
+            tuple: (product object, created boolean)
+        """
         vendor_id   = self.context['vendor_id']
         vendor      = Vendor.objects.get(pk=vendor_id)
         if not vendor:
@@ -53,10 +61,11 @@ class VendorProductSerializer(serializers.ModelSerializer):
             defaults={'name': self.validated_data.get('name', None)}
         )
 
+        created     = product[1]
         product     = product[0] # update_or_create returns a tuple, first object is product
         inventory   = Inventory.objects.get_or_create(vendor=vendor, product=product, vendor_product_id=self.validated_data.get('vendor_product_id'))
 
-        return product
+        return (product, created)
 
 class RetrieveVendorProductSerializer(VendorProductSerializer):
     vendor_product_id = serializers.SerializerMethodField(help_text=_("A value representing the vendor's ID number for the product."))

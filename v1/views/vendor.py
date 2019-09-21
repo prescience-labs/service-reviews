@@ -30,6 +30,6 @@ class VendorProductList(generics.ListCreateAPIView):
     def create(self, request, pk):
         serializer  = VendorProductSerializer(data=request.data, context={'vendor_id': pk})
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            result = serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED if result[1] else status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

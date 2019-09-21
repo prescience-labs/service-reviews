@@ -78,6 +78,14 @@ class UpsertTransactionComprehensiveSerializer(serializers.ModelSerializer):
         ]
 
     def save(self):
+        """Upserts a transaction
+
+        Returns a tuple that contains the transaction itself and a boolean value
+        that is True if the object was created in the database and false if not.
+
+        Returns:
+            tuple: (transaction object, created boolean)
+        """
         try:
             if not self.validated_data.get('customer_phone', None) and not self.validated_data.get('customer_email', None):
                 raise serializers.ValidationError('At least one of `customer_phone` and `customer_email` must have a value.')
@@ -115,7 +123,7 @@ class UpsertTransactionComprehensiveSerializer(serializers.ModelSerializer):
 
             for p in products:
                 transaction.products.add(p)
-            return transaction
+            return (transaction, created)
         except ValidationError as error:
             error_message = "The request wasn't formatted properly. Please check the body content and try again."
             if type(dict(error)['__all__']) is list: # find the error message for weird validation error

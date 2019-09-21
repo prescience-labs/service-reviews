@@ -100,7 +100,7 @@ class VendorListViewTests(TestCase):
         self.assertContains(request, product_name, status_code=201)
 
     def test_post_vendor_products_multiple_times_with_same_product(self):
-        """Should return a 201"""
+        """Should return a 201 then a 200"""
         vendor              = Vendor.objects.create(name='Test Vendor')
         product_name        = 'Test Product'
         vendor_product_id   = '3201'
@@ -117,5 +117,5 @@ class VendorListViewTests(TestCase):
             'vendor_product_id': vendor_product_id,
         })
         product_count_after_second_post = Product.objects.count()
-        self.assertContains(request, product_name, status_code=201)
+        self.assertContains(request, product_name, status_code=200)
         self.assertEqual(product_count_after_second_post, product_count_after_first_post)

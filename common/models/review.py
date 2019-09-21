@@ -15,9 +15,9 @@ class Review(BaseModel, models.Model):
         - SHOULD be associated with a Transaction
     """
     vendor              = models.ForeignKey(Vendor, on_delete=models.CASCADE)
-    text                = models.TextField()
     transaction         = models.ForeignKey(Transaction, on_delete=models.CASCADE, blank=True, null=True, help_text=_('The transaction associated with this review'))
     product             = models.ForeignKey(Product, on_delete=models.CASCADE, blank=True, null=True, help_text=_('The product this review is about'))
+    text                = models.TextField()
     rating              = models.PositiveSmallIntegerField(blank=True, null=True, help_text=_('The review rating, if it was included'))
     rating_max          = models.PositiveSmallIntegerField(blank=True, null=True, help_text=_('The max possible review rating, if it was included'))
     analytics_id        = models.UUIDField(blank=True, null=True, help_text=_(f'The document id from the <a href="{settings.DOCUMENTS_SERVICE["BASE_URL"]}">Documents Service</a>'))

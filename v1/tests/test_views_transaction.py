@@ -3,7 +3,7 @@ from uuid import uuid4
 from django.test import TestCase
 from rest_framework.test import APIClient
 
-from common.models import Inventory, Product, Vendor
+from common.models import Inventory, Product, Transaction, Vendor
 
 BASE_URL = '/v1/transactions'
 
@@ -239,7 +239,8 @@ class UpsertTransactionComprehensiveViewTests(TestCase):
 
     def test_post_transaction_comprehensive_twice_with_same_transaction(self):
         """Should return a 201"""
-        request = self.client.post(BASE_URL + '/comprehensive', {
+        transaction_count_init = Transaction.objects.count()
+        request1 = self.client.post(BASE_URL + '/comprehensive', {
             'customer_email': self.customer_email,
             'customer_phone': self.customer_phone,
             'vendor_integrations_type': self.vendor_integrations_type,
@@ -249,8 +250,8 @@ class UpsertTransactionComprehensiveViewTests(TestCase):
                 self.vendor_product_id,
             ],
         })
-        self.assertContains(request, self.customer_email, status_code=201)
-        request = self.client.post(BASE_URL + '/comprehensive', {
+        transaction_count_after_one_post = Transaction.objects.count()
+        request2 = self.client.post(BASE_URL + '/comprehensive', {
             'customer_email': self.customer_email,
             'customer_phone': self.customer_phone,
             'vendor_integrations_type': self.vendor_integrations_type,
@@ -260,11 +261,16 @@ class UpsertTransactionComprehensiveViewTests(TestCase):
                 self.vendor_product_id,
             ],
         })
-        self.assertContains(request, self.customer_email, status_code=201)
+        transaction_count_after_two_posts = Transaction.objects.count()
+        self.assertContains(request1, self.customer_email, status_code=201)
+        self.assertContains(request2, self.customer_email, status_code=200)
+        self.assertEqual(transaction_count_after_one_post, transaction_count_init + 1)
+        self.assertEqual(transaction_count_after_two_posts, transaction_count_after_one_post)
 
     def test_post_transaction_comprehensive_twice_with_changed_phone_numbers(self):
-        """Should return a 201"""
-        request = self.client.post(BASE_URL + '/comprehensive', {
+        """Should return a 201 then a 200"""
+        transaction_count_init = Transaction.objects.count()
+        request1 = self.client.post(BASE_URL + '/comprehensive', {
             'customer_email': self.customer_email,
             'customer_phone': self.customer_phone,
             'vendor_integrations_type': self.vendor_integrations_type,
@@ -274,8 +280,8 @@ class UpsertTransactionComprehensiveViewTests(TestCase):
                 self.vendor_product_id,
             ],
         })
-        self.assertContains(request, self.customer_email, status_code=201)
-        request = self.client.post(BASE_URL + '/comprehensive', {
+        transaction_count_after_one_post = Transaction.objects.count()
+        request2 = self.client.post(BASE_URL + '/comprehensive', {
             'customer_email': self.customer_email,
             'customer_phone': self.customer_phone + '1',
             'vendor_integrations_type': self.vendor_integrations_type,
@@ -285,4 +291,8 @@ class UpsertTransactionComprehensiveViewTests(TestCase):
                 self.vendor_product_id,
             ],
         })
-        self.assertContains(request, self.customer_email, status_code=201)
+        transaction_count_after_two_posts = Transaction.objects.count()
+        self.assertContains(request1, self.customer_email, status_code=201)
+        self.assertContains(request2, self.customer_email, status_code=200)
+        self.assertEqual(transaction_count_after_one_post, transaction_count_init + 1)
+        self.assertEqual(transaction_count_after_two_posts, transaction_count_after_one_post)
