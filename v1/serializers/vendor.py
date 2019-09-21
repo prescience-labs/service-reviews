@@ -13,14 +13,7 @@ class VendorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model               = Vendor
-        fields              = [
-            'id',
-            'name',
-            'integrations_type',
-            'integrations_id',
-            'created_at',
-            'updated_at',
-        ]
+        fields              = '__all__'
         read_only_fields    = [
             'id',
             'created_at',

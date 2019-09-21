@@ -6,16 +6,7 @@ from common.models import Product, Transaction, Vendor
 class TransactionSerializer(serializers.ModelSerializer):
     class Meta:
         model               = Transaction
-        fields              = [
-            'id',
-            'vendor',
-            'vendor_transaction_id',
-            'customer_email',
-            'customer_phone',
-            'products',
-            'created_at',
-            'updated_at',
-        ]
+        fields              = '__all__'
         read_only_fields    = [
             'id',
             'created_at',
