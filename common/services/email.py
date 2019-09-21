@@ -30,7 +30,7 @@ class Email:
         self.subject        = f'Tell us about your order from {vendor_name}'
         self.content        = render_to_string('common/email_review_request.html', context={
             'vendor_name': vendor_name,
-            'review_request_link': f'https://app.dataintel.ai/{transaction_id}' if transaction_id else 'https://app.dataintel.ai',
+            'review_request_link': f'https://app.dataintel.ai/review/{transaction_id}' if transaction_id else 'https://app.dataintel.ai',
         })
 
         post_url    = f'{settings.MAILER_SERVICE["BASE_URL"]}/mailer/schedule'
