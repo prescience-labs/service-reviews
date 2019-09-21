@@ -52,32 +52,49 @@ class VendorListViewTests(TestCase):
     def test_post_vendor_no_integrations_type(self):
         """Should still create the object with a 201"""
         test_vendor_name                = 'Test Vendor'
-        test_vendor_integrations_type   = ''
         test_vendor_integrations_id     = str(uuid4())
         request = self.client.post(BASE_URL, {
             'name': test_vendor_name,
-            'integrations_type': test_vendor_integrations_type,
             'integrations_id': test_vendor_integrations_id,
         })
         self.assertEqual(request.status_code, 201)
         self.assertEqual(test_vendor_name, request.data['name'])
-        self.assertEqual(test_vendor_integrations_type, request.data['integrations_type'])
         self.assertEqual(test_vendor_integrations_id, request.data['integrations_id'])
+
+    def test_post_vendor_blank_integrations_type(self):
+        """Should return a 400"""
+        test_vendor_name                = 'Test Vendor'
+        test_vendor_integrations_id     = str(uuid4())
+        request = self.client.post(BASE_URL, {
+            'name': test_vendor_name,
+            'integrations_type': '',
+            'integrations_id': test_vendor_integrations_id,
+        })
+        self.assertContains(request, 'integrations_type', status_code=400)
 
     def test_post_vendor_no_integrations_id(self):
         """Should still create the object with a 201"""
         test_vendor_name                = 'Test Vendor'
         test_vendor_integrations_type   = 'test_type'
-        test_vendor_integrations_id     = ''
         request = self.client.post(BASE_URL, {
             'name': test_vendor_name,
             'integrations_type': test_vendor_integrations_type,
-            'integrations_id': test_vendor_integrations_id,
         })
         self.assertEqual(request.status_code, 201)
         self.assertEqual(test_vendor_name, request.data['name'])
         self.assertEqual(test_vendor_integrations_type, request.data['integrations_type'])
-        self.assertEqual(test_vendor_integrations_id, request.data['integrations_id'])
+
+    def test_post_vendor_blank_integrations_id(self):
+        """Should return a 400"""
+        test_vendor_name                = 'Test Vendor'
+        test_vendor_integrations_type   = 'test_type'
+        request = self.client.post(BASE_URL, {
+            'name': test_vendor_name,
+            'integrations_type': test_vendor_integrations_type,
+            'integrations_id': str(''),
+        })
+        print(request.json())
+        self.assertContains(request, 'integrations_id', status_code=400)
 
     def test_post_vendor_products_with_all_data(self):
         """Should return a 201"""
