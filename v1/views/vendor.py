@@ -12,7 +12,7 @@ from v1.serializers import (
 class VendorList(generics.ListCreateAPIView):
     queryset            = Vendor.objects.all()
     serializer_class    = VendorSerializer
-    filterset_fields    = ('integrations_type', 'integrations_id',)
+    filterset_fields    = ('name', 'integrations_type', 'integrations_id',)
 
 class VendorDetail(generics.RetrieveUpdateAPIView):
     queryset            = Vendor.objects.all()
