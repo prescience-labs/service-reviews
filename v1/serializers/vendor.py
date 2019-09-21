@@ -1,3 +1,4 @@
+from django.db.models import ObjectDoesNotExist
 from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 
@@ -39,10 +40,23 @@ class VendorProductSerializer(serializers.ModelSerializer):
         ]
 
     def save(self):
-        vendor_id   = self.context['vendor_id'] if self.context['vendor_id'] else None
+        print('CREATING')
+        vendor_id   = self.context['vendor_id']
         vendor      = Vendor.objects.get(pk=vendor_id)
-        product     = Product.objects.create(name=self.validated_data['name'])
-        inventory   = Inventory.objects.create(vendor=vendor, product=product, vendor_product_id=self.validated_data['vendor_product_id'])
+        if not vendor:
+            raise serializers.ValidationError(f'Vendor with id {vendor_id} does not exist')
+
+        # we do update_or_create to allow the integrations service to POST to the endpoint
+        # without doing additional checks to see if the object already exists
+        product     = Product.objects.update_or_create(
+            inventory__vendor_product_id=self.validated_data.get('vendor_product_id', None),
+            inventory__vendor=vendor,
+            defaults={'name': self.validated_data.get('name', None)}
+        )
+
+        product     = product[0] # update_or_create returns a tuple, first object is product
+        inventory   = Inventory.objects.get_or_create(vendor=vendor, product=product, vendor_product_id=self.validated_data.get('vendor_product_id'))
+
         return product
 
 class RetrieveVendorProductSerializer(VendorProductSerializer):
