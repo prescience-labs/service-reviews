@@ -1,3 +1,4 @@
+from django_filters import rest_framework as filters
 from rest_framework import generics, status
 from rest_framework.response import Response
 
@@ -9,9 +10,17 @@ from v1.serializers import (
     VendorSerializer,
 )
 
+class ProductFilter(filters.FilterSet):
+    vendor_product_id = filters.CharFilter(field_name='inventory__vendor_product_id')
+
+    class Meta:
+        model   = Product
+        fields  = ['name', 'vendor_product_id']
+
 class ProductList(generics.ListCreateAPIView):
     queryset            = Product.objects.all()
     serializer_class    = ProductSerializer
+    filterset_class     = ProductFilter
 
 class ProductDetail(generics.RetrieveUpdateAPIView):
     queryset            = Product.objects.all()
