@@ -6,6 +6,11 @@ from rest_framework import serializers
 from common.models import Inventory, Product, Vendor
 
 class VendorSerializer(serializers.ModelSerializer):
+    # Must set default=None on these because they are part of a unique_together constraint
+    # https://github.com/encode/django-rest-framework/issues/4456#issuecomment-244017057
+    integrations_type   = serializers.CharField(required=False, allow_null=True, default=None)
+    integrations_id     = serializers.CharField(required=False, allow_null=True, default=None)
+
     class Meta:
         model               = Vendor
         fields              = [
@@ -21,14 +26,6 @@ class VendorSerializer(serializers.ModelSerializer):
             'created_at',
             'updated_at',
         ]
-
-    # def create(self, validated_data):
-    #     vendor, created = Vendor.objects.update_or_create(
-    #         integrations_type=validated_data.get('integrations_type', None),
-    #         integrations_id=validated_data.get('integrations_id', None),
-    #         defaults={'name': validated_data.get('name')}
-    #     )
-    #     return vendor
 
 class VendorProductSerializer(serializers.ModelSerializer):
     vendor_product_id = serializers.CharField()
