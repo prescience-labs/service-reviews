@@ -40,7 +40,6 @@ class VendorProductSerializer(serializers.ModelSerializer):
         ]
 
     def save(self):
-        print('CREATING')
         vendor_id   = self.context['vendor_id']
         vendor      = Vendor.objects.get(pk=vendor_id)
         if not vendor:

@@ -236,3 +236,53 @@ class UpsertTransactionComprehensiveViewTests(TestCase):
         })
         self.assertContains(request, self.vendor.name, status_code=400)
         self.assertContains(request, product_name, status_code=400)
+
+    def test_post_transaction_comprehensive_twice_with_same_transaction(self):
+        """Should return a 201"""
+        request = self.client.post(BASE_URL + '/comprehensive', {
+            'customer_email': self.customer_email,
+            'customer_phone': self.customer_phone,
+            'vendor_integrations_type': self.vendor_integrations_type,
+            'vendor_integrations_id': self.vendor_integrations_id,
+            'vendor_transaction_id': self.vendor_transaction_id,
+            'vendor_product_ids': [
+                self.vendor_product_id,
+            ],
+        })
+        self.assertContains(request, self.customer_email, status_code=201)
+        request = self.client.post(BASE_URL + '/comprehensive', {
+            'customer_email': self.customer_email,
+            'customer_phone': self.customer_phone,
+            'vendor_integrations_type': self.vendor_integrations_type,
+            'vendor_integrations_id': self.vendor_integrations_id,
+            'vendor_transaction_id': self.vendor_transaction_id,
+            'vendor_product_ids': [
+                self.vendor_product_id,
+            ],
+        })
+        self.assertContains(request, self.customer_email, status_code=201)
+
+    def test_post_transaction_comprehensive_twice_with_changed_phone_numbers(self):
+        """Should return a 201"""
+        request = self.client.post(BASE_URL + '/comprehensive', {
+            'customer_email': self.customer_email,
+            'customer_phone': self.customer_phone,
+            'vendor_integrations_type': self.vendor_integrations_type,
+            'vendor_integrations_id': self.vendor_integrations_id,
+            'vendor_transaction_id': self.vendor_transaction_id,
+            'vendor_product_ids': [
+                self.vendor_product_id,
+            ],
+        })
+        self.assertContains(request, self.customer_email, status_code=201)
+        request = self.client.post(BASE_URL + '/comprehensive', {
+            'customer_email': self.customer_email,
+            'customer_phone': self.customer_phone + '1',
+            'vendor_integrations_type': self.vendor_integrations_type,
+            'vendor_integrations_id': self.vendor_integrations_id,
+            'vendor_transaction_id': self.vendor_transaction_id,
+            'vendor_product_ids': [
+                self.vendor_product_id,
+            ],
+        })
+        self.assertContains(request, self.customer_email, status_code=201)
