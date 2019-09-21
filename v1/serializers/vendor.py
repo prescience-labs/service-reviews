@@ -1,3 +1,4 @@
+from django.db import IntegrityError
 from django.db.models import ObjectDoesNotExist
 from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
@@ -20,6 +21,38 @@ class VendorSerializer(serializers.ModelSerializer):
             'created_at',
             'updated_at',
         ]
+
+    def is_valid(self, raise_exception=False):
+        """Validates the input
+
+        For this specific implementation, we are using the data to do an
+        upsert on Vendor, so we have to check that the unique constraint
+        is there but we aren't violating it. This is ok because we also
+        run the unique constraint on the model itself before it saves to
+        the database.
+
+        Args:
+            raise_exception (bool, optional): Raise an exception if it fails. Defaults to False.
+
+        Returns:
+            boolean: Is the serializer data valid
+        """
+        result = super().is_valid(raise_exception=raise_exception)
+        if not result:
+            for e in self.errors['non_field_errors']:
+                if 'integrations_type' in e and e.code == 'unique':
+                    result = True
+        return result
+
+    def create(self, validated_data):
+        result = Vendor.objects.update_or_create(
+            integrations_type=validated_data.get('integrations_type', None),
+            integrations_id=validated_data.get('integrations_id', None),
+            defaults={
+                'name': validated_data.get('name', None)
+            },
+        )
+        return result
 
 class VendorProductSerializer(serializers.ModelSerializer):
     vendor_product_id = serializers.CharField()

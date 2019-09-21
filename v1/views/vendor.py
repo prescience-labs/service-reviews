@@ -14,6 +14,13 @@ class VendorList(generics.ListCreateAPIView):
     serializer_class    = VendorSerializer
     filterset_fields    = ('integrations_type', 'integrations_id',)
 
+    def post(self, request, *args, **kwargs):
+        serializer = VendorSerializer(data=request.data)
+        if serializer.is_valid():
+            result = serializer.create(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED if result[1] else status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 class VendorDetail(generics.RetrieveAPIView):
     queryset            = Vendor.objects.all()
     serializer_class    = VendorSerializer
