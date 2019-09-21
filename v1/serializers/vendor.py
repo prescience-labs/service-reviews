@@ -39,9 +39,10 @@ class VendorSerializer(serializers.ModelSerializer):
         """
         result = super().is_valid(raise_exception=raise_exception)
         if not result:
-            for e in self.errors['non_field_errors']:
-                if 'integrations_type' in e and e.code == 'unique':
-                    result = True
+            if 'non_field_errors' in self.errors:
+                for e in self.errors['non_field_errors']:
+                    if 'integrations_type' in e and e.code == 'unique':
+                        result = True
         return result
 
     def create(self, validated_data):
@@ -52,6 +53,7 @@ class VendorSerializer(serializers.ModelSerializer):
                 'name': validated_data.get('name', None)
             },
         )
+        print(result[0])
         return result
 
 class VendorProductSerializer(serializers.ModelSerializer):

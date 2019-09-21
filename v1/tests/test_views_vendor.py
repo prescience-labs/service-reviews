@@ -33,12 +33,9 @@ class VendorListViewTests(TestCase):
             'integrations_id': test_vendor_integrations_id,
         })
         self.assertEqual(request.status_code, 201)
-        self.assertTrue('id' in request.data)
         self.assertEqual(test_vendor_name, request.data['name'])
         self.assertEqual(test_vendor_integrations_type, request.data['integrations_type'])
         self.assertEqual(test_vendor_integrations_id, request.data['integrations_id'])
-        self.assertTrue('created_at' in request.data)
-        self.assertTrue('updated_at' in request.data)
 
     def test_post_vendor_no_name(self):
         """Should return a clean 400 error"""
@@ -63,12 +60,9 @@ class VendorListViewTests(TestCase):
             'integrations_id': test_vendor_integrations_id,
         })
         self.assertEqual(request.status_code, 201)
-        self.assertTrue('id' in request.data)
         self.assertEqual(test_vendor_name, request.data['name'])
         self.assertEqual(test_vendor_integrations_type, request.data['integrations_type'])
         self.assertEqual(test_vendor_integrations_id, request.data['integrations_id'])
-        self.assertTrue('created_at' in request.data)
-        self.assertTrue('updated_at' in request.data)
 
     def test_post_vendor_no_integrations_id(self):
         """Should still create the object with a 201"""
@@ -81,12 +75,9 @@ class VendorListViewTests(TestCase):
             'integrations_id': test_vendor_integrations_id,
         })
         self.assertEqual(request.status_code, 201)
-        self.assertTrue('id' in request.data)
         self.assertEqual(test_vendor_name, request.data['name'])
         self.assertEqual(test_vendor_integrations_type, request.data['integrations_type'])
         self.assertEqual(test_vendor_integrations_id, request.data['integrations_id'])
-        self.assertTrue('created_at' in request.data)
-        self.assertTrue('updated_at' in request.data)
 
     def test_post_vendor_products_with_all_data(self):
         """Should return a 201"""
