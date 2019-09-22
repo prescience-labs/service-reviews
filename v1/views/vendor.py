@@ -1,42 +1,53 @@
-from rest_framework import generics, status
+from django.db import IntegrityError
+from django_filters import rest_framework as filters
+from rest_framework import generics, serializers, status
 from rest_framework.response import Response
 
-from common.models import Product, Vendor
+from common.models import Inventory, Product, Vendor
 from v1.serializers import (
     ProductSerializer,
     VendorSerializer,
     VendorProductSerializer,
-    RetrieveVendorProductSerializer,
 )
+from ._filters import ProductFilter, VendorFilter
 
 class VendorList(generics.ListCreateAPIView):
+    """All vendors"""
     queryset            = Vendor.objects.all()
     serializer_class    = VendorSerializer
-    filterset_fields    = ('integrations_type', 'integrations_id',)
+    filterset_class     = VendorFilter
 
-    def post(self, request, *args, **kwargs):
-        serializer = VendorSerializer(data=request.data)
-        if serializer.is_valid():
-            result = serializer.create(serializer.data)
-            return Response(serializer.data, status=status.HTTP_201_CREATED if result[1] else status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-class VendorDetail(generics.RetrieveAPIView):
+class VendorDetail(generics.RetrieveUpdateAPIView):
+    """A specific vendor"""
     queryset            = Vendor.objects.all()
     serializer_class    = VendorSerializer
 
 class VendorProductList(generics.ListCreateAPIView):
-    queryset            = Product.objects.all()
+    """A specific vendor's products"""
     serializer_class    = ProductSerializer
+    filterset_class     = ProductFilter
 
-    def list(self, request, pk):
-        queryset    = Product.objects.filter(vendors__id=pk)
-        serializer  = RetrieveVendorProductSerializer(queryset, many=True, context={'vendor_id': pk})
-        return Response(serializer.data)
+    def get_queryset(self):
+        vendor_id = self.kwargs['pk']
+        return Product.objects.filter(vendors__id=vendor_id)
 
-    def create(self, request, pk):
-        serializer  = VendorProductSerializer(data=request.data, context={'vendor_id': pk})
-        if serializer.is_valid():
-            result = serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED if result[1] else status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def create(self, request, pk, *args, **kwargs):
+        """Creates a product and puts it in the vendor's inventory.
+
+        TODO: Add tests
+
+        TODO: This has lots of logic that should ultimately live in a serializer.
+        """
+        vendor = Vendor.objects.get_or_none(pk=pk)
+        if not vendor:
+            raise serializers.ValidationError(f'A vendor with ID {pk} could not be found.', code=status.HTTP_404_NOT_FOUND)
+        vendor_product_id = request.data.get('vendor_product_id', None)
+        if not vendor_product_id: # this should be in a serializer in the future.
+            raise serializers.ValidationError({'vendor_product_id':['This field is required.']})
+        result = super().create(request, *args, **kwargs)
+        product = Product.objects.get(pk=result.data['id']) # can't get it returned from self.create()
+        try:
+            inventory = Inventory.objects.create(product=product, vendor=vendor, vendor_product_id=vendor_product_id)
+            return result
+        except IntegrityError:
+            raise serializers.ValidationError('A product under that vendor already uses that vendor_product_id.')
