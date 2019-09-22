@@ -12,15 +12,18 @@ from v1.serializers import (
 from ._filters import ProductFilter, VendorFilter
 
 class VendorList(generics.ListCreateAPIView):
+    """All vendors"""
     queryset            = Vendor.objects.all()
     serializer_class    = VendorSerializer
     filterset_class     = VendorFilter
 
 class VendorDetail(generics.RetrieveUpdateAPIView):
+    """A specific vendor"""
     queryset            = Vendor.objects.all()
     serializer_class    = VendorSerializer
 
 class VendorProductList(generics.ListCreateAPIView):
+    """A specific vendor's products"""
     queryset            = Product.objects.all()
     serializer_class    = ProductSerializer
     filterset_class     = ProductFilter
