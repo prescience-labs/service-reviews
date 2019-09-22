@@ -1,3 +1,4 @@
+from django_filters import rest_framework as filters
 from rest_framework import generics, status
 from rest_framework.response import Response
 
@@ -8,11 +9,12 @@ from v1.serializers import (
     VendorProductSerializer,
     RetrieveVendorProductSerializer,
 )
+from ._filters import ProductFilter, VendorFilter
 
 class VendorList(generics.ListCreateAPIView):
     queryset            = Vendor.objects.all()
     serializer_class    = VendorSerializer
-    filterset_fields    = ('name', 'integrations_type', 'integrations_id',)
+    filterset_class     = VendorFilter
 
 class VendorDetail(generics.RetrieveUpdateAPIView):
     queryset            = Vendor.objects.all()
@@ -21,6 +23,7 @@ class VendorDetail(generics.RetrieveUpdateAPIView):
 class VendorProductList(generics.ListCreateAPIView):
     queryset            = Product.objects.all()
     serializer_class    = ProductSerializer
+    filterset_class     = ProductFilter
 
     def list(self, request, pk):
         queryset    = Product.objects.filter(vendors__id=pk)

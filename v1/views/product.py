@@ -9,13 +9,7 @@ from v1.serializers import (
     RetrieveProductVendorSerializer,
     VendorSerializer,
 )
-
-class ProductFilter(filters.FilterSet):
-    vendor_product_id = filters.CharFilter(field_name='inventory__vendor_product_id')
-
-    class Meta:
-        model   = Product
-        fields  = ['name', 'vendor_product_id']
+from ._filters import ProductFilter, VendorFilter
 
 class ProductList(generics.ListCreateAPIView):
     queryset            = Product.objects.all()
@@ -29,6 +23,7 @@ class ProductDetail(generics.RetrieveUpdateAPIView):
 class ProductVendorList(generics.ListCreateAPIView):
     queryset            = Vendor.objects.all()
     serializer_class    = VendorSerializer
+    filterset_class     = VendorFilter
 
     def list(self, request, pk):
         queryset    = Vendor.objects.filter(product__id=pk)
