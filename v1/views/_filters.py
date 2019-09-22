@@ -4,6 +4,8 @@ from django_filters import rest_framework as filters
 from common.models import Product, Review, Vendor
 
 class ProductFilter(filters.FilterSet):
+    before                  = filters.DateFilter(field_name='created_at', lookup_expr='lte', help_text=_('**Exclusive** created before date (YYYY-MM-DD)'))
+    after                   = filters.DateFilter(field_name='created_at', lookup_expr='gte', help_text=_('**Inclusive** created after date (YYYY-MM-DD)'))
     vendor_product_id       = filters.CharFilter(field_name='inventory__vendor_product_id', lookup_expr='icontains', help_text=_('Case-insensitive fuzzy `vendor_product_id` search'))
     vendor_product_id_exact = filters.CharFilter(field_name='inventory__vendor_product_id', lookup_expr='exact', help_text=_('Exact `vendor_product_id` search'))
     name                    = filters.CharFilter(field_name='name', lookup_expr='icontains', help_text=_('Case-insensitive fuzzy `name` search'))
@@ -19,9 +21,9 @@ class ProductFilter(filters.FilterSet):
         ]
 
 class ReviewFilter(filters.FilterSet):
+    before  = filters.DateFilter(field_name='created_at', lookup_expr='lte', help_text=_('**Exclusive** created before date (YYYY-MM-DD)'))
+    after   = filters.DateFilter(field_name='created_at', lookup_expr='gte', help_text=_('**Inclusive** created after date (YYYY-MM-DD)'))
     text    = filters.CharFilter(field_name='text', lookup_expr='icontains', help_text=_('Case-insensitive fuzzy text search'))
-    before  = filters.DateFilter(field_name='created_at', lookup_expr='lte', help_text=_('**Exclusive** before date (YYYY-MM-DD)'))
-    after   = filters.DateFilter(field_name='created_at', lookup_expr='gte', help_text=_('**Inclusive** after date (YYYY-MM-DD)'))
 
     class Meta:
         model   = Review
@@ -30,6 +32,8 @@ class ReviewFilter(filters.FilterSet):
         ]
 
 class VendorFilter(filters.FilterSet):
+    before                  = filters.DateFilter(field_name='created_at', lookup_expr='lte', help_text=_('**Exclusive** created before date (YYYY-MM-DD)'))
+    after                   = filters.DateFilter(field_name='created_at', lookup_expr='gte', help_text=_('**Inclusive** created after date (YYYY-MM-DD)'))
     integrations_type       = filters.CharFilter(field_name='integrations_type', lookup_expr='icontains', help_text=_('Case-insensitive fuzzy `integrations_type` search'))
     integrations_type_exact = filters.CharFilter(field_name='integrations_type', lookup_expr='exact', help_text=_('Exact `integrations_type` search'))
     integrations_id         = filters.CharFilter(field_name='integrations_id', lookup_expr='icontains', help_text=_('Case-insensitive fuzzy `integrations_id` search'))
