@@ -8,7 +8,6 @@ from v1.serializers import (
     ProductSerializer,
     VendorSerializer,
     VendorProductSerializer,
-    RetrieveVendorProductSerializer,
 )
 from ._filters import ProductFilter, VendorFilter
 

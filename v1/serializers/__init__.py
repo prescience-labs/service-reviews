@@ -1,4 +1,4 @@
 from .product import ProductSerializer, ProductVendorSerializer
 from .review import ReviewSerializer
 from .transaction import TransactionSerializer, TransactionProductSerializer, UpsertTransactionComprehensiveSerializer
-from .vendor import VendorSerializer, VendorProductSerializer, RetrieveVendorProductSerializer
+from .vendor import VendorSerializer, VendorProductSerializer
