@@ -14,6 +14,10 @@ class TransactionSerializer(serializers.ModelSerializer):
         ]
 
     def create(self, validated_data):
+        """Creates a new transaction
+
+        TODO: For some reason, removing this block breaks the upsert function.
+        """
         try:
             return super().create(validated_data)
         except ValidationError as e:
@@ -21,6 +25,7 @@ class TransactionSerializer(serializers.ModelSerializer):
             if type(e.messages) is list:
                 message = e.messages[0]
             raise serializers.ValidationError(message)
+
 class TransactionProductSerializer(serializers.ModelSerializer):
     class Meta:
         model               = Product
@@ -37,7 +42,12 @@ class TransactionProductSerializer(serializers.ModelSerializer):
         ]
 
 class UpsertTransactionComprehensiveSerializer(serializers.ModelSerializer):
-    """Allows creating a transaction without knowledge of product or vendor IDs"""
+    """Allows creating a transaction without knowledge of product or vendor IDs
+
+    This custom serializer was originally created to serve the needs of the
+    integrations service so it could avoid an n+1 issue when creating new
+    transactions.
+    """
     customer_email              = serializers.EmailField(required=False)
     vendor_integrations_type    = serializers.CharField(write_only=True)
     vendor_integrations_id      = serializers.CharField(write_only=True)
