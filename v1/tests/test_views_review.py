@@ -4,9 +4,8 @@ from rest_framework.test import APIClient
 BASE_URL = '/v1/reviews'
 
 class ReviewListViewTests(TestCase):
-    def __init__(self, *args, **kwargs):
+    def setUp(self):
         self.client = APIClient()
-        super().__init__(*args, **kwargs)
 
     def test_no_reviews(self):
         """Ensures that an empty response (no data existing) looks as expected"""
