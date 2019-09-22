@@ -35,7 +35,9 @@ class ProductVendorList(generics.ListCreateAPIView):
 
         TODO: This has lots of logic that should ultimately live in a serializer.
         """
-        product = Product.objects.get(pk=pk)
+        product = Product.objects.get_or_none(pk=pk)
+        if not product:
+            raise serializers.ValidationError(f'A product with ID {pk} could not be found.', code=status.HTTP_404_NOT_FOUND)
         vendor_product_id = request.data.get('vendor_product_id', None)
         if not vendor_product_id: # this should be in a serializer in the future.
             raise serializers.ValidationError({'vendor_product_id':['This field is required.']})
