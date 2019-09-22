@@ -48,18 +48,3 @@ class ProductVendorSerializer(serializers.ModelSerializer):
         )
         inventory   = Inventory.objects.create(vendor=vendor, product=product, vendor_product_id=self.validated_data['vendor_product_id'])
         return vendor
-
-class RetrieveProductVendorSerializer(ProductVendorSerializer):
-    vendor_product_id = serializers.SerializerMethodField(help_text=_("A value representing the vendor's ID number for the product."))
-
-    def get_vendor_product_id(self, obj):
-        """Returns the vendor_product_id of the product given the vendor from the context.
-
-        This relies on a `product_id` being passed in the context.
-
-        Returns:
-            string: The vendor-product identifier
-        """
-        product_id  = self.context['product_id'] if self.context['product_id'] else None
-        item        = Inventory.objects.get(product__id=product_id, vendor=obj)
-        return item.vendor_product_id

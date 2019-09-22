@@ -6,7 +6,6 @@ from common.models import Product, Vendor
 from v1.serializers import (
     ProductSerializer,
     ProductVendorSerializer,
-    RetrieveProductVendorSerializer,
     VendorSerializer,
 )
 from ._filters import ProductFilter, VendorFilter
@@ -30,7 +29,7 @@ class ProductVendorList(generics.ListCreateAPIView):
 
     def list(self, request, pk):
         queryset    = Vendor.objects.filter(product__id=pk)
-        serializer  = RetrieveProductVendorSerializer(queryset, many=True, context={'product_id': pk})
+        serializer  = VendorSerializer(queryset, many=True)
         return Response(serializer.data)
 
     def create(self, request, pk):
