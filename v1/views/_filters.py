@@ -1,6 +1,6 @@
 from django_filters import rest_framework as filters
 
-from common.models import Product, Vendor
+from common.models import Product, Review, Vendor
 
 class ProductFilter(filters.FilterSet):
     vendor_product_id       = filters.CharFilter(field_name='inventory__vendor_product_id', lookup_expr='icontains')
@@ -15,6 +15,15 @@ class ProductFilter(filters.FilterSet):
             'vendor_product_id_exact',
             'name',
             'name_exact',
+        ]
+
+class ReviewFilter(filters.FilterSet):
+    text = filters.CharFilter(field_name='text', lookup_expr='icontains')
+
+    class Meta:
+        model   = Review
+        fields  = [
+            'text',
         ]
 
 class VendorFilter(filters.FilterSet):
