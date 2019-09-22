@@ -75,6 +75,13 @@ class ProductListViewTests(TestCase):
         self.assertContains(request, 'Test Vendor', status_code=201)
         self.assertContains(request, 'amazon', status_code=201)
 
+    def test_post_product_vendor_without_name(self):
+        """Should return a 400 and contain helpful information"""
+        request = self.client.post(f'{BASE_URL}/{self.product.id}/vendors', {
+            'vendor_product_id': '3201',
+        })
+        self.assertContains(request, 'name', status_code=400)
+
     def test_post_product_vendor_without_vendor_product_id(self):
         """Should return a 400 and contain helpful information"""
         request = self.client.post(f'{BASE_URL}/{self.product.id}/vendors', {

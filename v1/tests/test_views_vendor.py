@@ -10,9 +10,11 @@ BASE_URL = '/v1/vendors'
 class VendorListViewTests(TestCase):
     def setUp(self):
         self.client = APIClient()
+        self.vendor = Vendor.objects.create(name='Test Vendor')
 
     def test_no_vendors(self):
         """Ensures that an empty response (no data existing) looks as expected"""
+        self.vendor.delete()
         request         = self.client.get(BASE_URL)
         expected_result = {
             'count': 0,
@@ -75,11 +77,24 @@ class VendorListViewTests(TestCase):
 
     def test_post_vendor_products_with_all_data(self):
         """Should return a 201"""
-        vendor              = Vendor.objects.create(name='Test Vendor')
         product_name        = 'Test Product'
         vendor_product_id   = '3201'
-        request = self.client.post(f'{BASE_URL}/{vendor.id}/products', {
+        request = self.client.post(f'{BASE_URL}/{self.vendor.id}/products', {
             'name': product_name,
             'vendor_product_id': vendor_product_id,
         })
         self.assertContains(request, product_name, status_code=201)
+
+    def test_post_vendor_products_without_name(self):
+        """Should return a 400 and contain helpful information"""
+        request = self.client.post(f'{BASE_URL}/{self.vendor.id}/products', {
+            'vendor_product_id': '3201',
+        })
+        self.assertContains(request, 'name', status_code=400)
+
+    def test_post_vendor_products_without_vendor_product_id(self):
+        """Should return a 400 and contain helpful information"""
+        request = self.client.post(f'{BASE_URL}/{self.vendor.id}/products', {
+            'name': 'Test Product',
+        })
+        self.assertContains(request, 'vendor_product_id', status_code=400)
