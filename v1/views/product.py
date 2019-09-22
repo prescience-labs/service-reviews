@@ -30,19 +30,11 @@ class ProductVendorList(generics.ListCreateAPIView):
         product_id = self.kwargs['pk']
         return Vendor.objects.filter(product__id=product_id)
 
-    # def list(self, request, pk):
-    #     self.queryset   = Vendor.objects.filter(product__id=pk)
-    #     serializer      = VendorSerializer(self.queryset, many=True)
-    #     return Response(serializer.data)
-
-    # def create(self, request, pk):
-        # serializer  = ProductVendorSerializer(data=request.data, context={'product_id': pk})
-        # if serializer.is_valid():
-        #     serializer.save()
-        #     return Response(serializer.data, status=status.HTTP_201_CREATED)
-        # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
     def create(self, request, pk, *args, **kwargs):
+        """Creates a vendor with the product in their inventory.
+
+        TODO: This has lots of logic that should ultimately live in a serializer.
+        """
         product = Product.objects.get(pk=pk)
         vendor_product_id = request.data.get('vendor_product_id', None)
         if not vendor_product_id: # this should be in a serializer in the future.

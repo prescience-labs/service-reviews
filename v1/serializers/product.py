@@ -42,18 +42,3 @@ class ProductVendorSerializer(serializers.ModelSerializer):
             'created_at',
             'updated_at',
         ]
-
-    def save(self, **kwargs):
-        print('savingggg')
-        return super().save(**kwargs)
-
-    # def save(self):
-    #     product_id  = self.context['product_id'] if self.context['product_id'] else None
-    #     product     = Product.objects.get(pk=product_id)
-    #     vendor      = Vendor.objects.create(
-    #         name=self.validated_data['name'],
-    #         integrations_type=self.validated_data['integrations_type'],
-    #         integrations_id=self.validated_data['integrations_id'],
-    #     )
-    #     inventory   = Inventory.objects.create(vendor=vendor, product=product, vendor_product_id=self.validated_data['vendor_product_id'])
-    #     return vendor
