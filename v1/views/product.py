@@ -33,8 +33,6 @@ class ProductVendorList(generics.ListCreateAPIView):
     def create(self, request, pk, *args, **kwargs):
         """Creates a vendor with the product in their inventory.
 
-        TODO: Add tests
-
         TODO: This has lots of logic that should ultimately live in a serializer.
         """
         product = Product.objects.get_or_none(pk=pk)
