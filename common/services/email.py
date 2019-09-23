@@ -34,6 +34,7 @@ class Email:
         })
 
         post_url    = f'{settings.MAILER_SERVICE["BASE_URL"]}/mailer/schedule'
+        logger.debug(f'POST {post_url}')
         post_data   = {
             'messageData':          self.content,
             'recipientAddress':     self.recipient,
@@ -41,8 +42,6 @@ class Email:
             'subject':              self.subject,
             'scheduledSendDate':    (datetime.utcnow() + timedelta(days=email_delay_days)).isoformat(),
         }
-
-        logger.debug(f'POST {post_url}')
         logger.debug(post_data)
 
         return requests.post(post_url, post_data)
