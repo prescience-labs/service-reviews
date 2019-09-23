@@ -15,15 +15,12 @@ class Command(BaseCommand):
         if len(transactions) is 0:
             self.stdout.write(self.style.NOTICE('No transactions were found with the given criteria'))
         for t in transactions:
-            try:
-                # send email
-                email = Email(t.customer_email)
-                email.send_review_request(t.vendor.name, transaction_id=t.id)
+            # send email
+            email = Email(t.customer_email)
+            email.send_review_request(t.vendor.name, transaction_id=t.id)
 
-                # increment review_requests_sent
-                t.review_requests_sent += 1
-                t.save()
+            # increment review_requests_sent
+            t.review_requests_sent += 1
+            t.save()
 
-                self.stdout.write(self.style.SUCCESS(f'Sent review request to {t.customer_email} for transaction {t.id}'))
-            except:
-                self.stdout.write(self.style.ERROR('There was an error :('))
+            self.stdout.write(self.style.SUCCESS(f'Sent review request to {t.customer_email} for transaction {t.id}'))
