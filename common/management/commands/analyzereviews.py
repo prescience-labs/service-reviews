@@ -1,3 +1,5 @@
+import time
+
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 from django.db.models import Q
@@ -25,3 +27,5 @@ class Command(BaseCommand):
             r.save()
 
             self.stdout.write(self.style.SUCCESS(f'Analyzed review for {r.vendor} with id {r.id}'))
+            self.stdout.write(self.style.NOTICE('Sleeping for 2 seconds'))
+            time.sleep(2)
