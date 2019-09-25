@@ -13,6 +13,7 @@ class ReviewSerializer(serializers.ModelSerializer):
         fields              = '__all__'
         read_only_fields    = [
             'sentiment_analysis',
+            'analytics_id',
             'created_at',
             'updated_at',
         ]
