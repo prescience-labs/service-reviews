@@ -14,7 +14,7 @@ class Command(BaseCommand):
         reviews = Review.objects.filter(
             Q(sentiment_analysis__isnull=True)
             | Q(analytics_id__isnull=True)
-        )[:1750]
+        )[:2000]
         if len(reviews) is 0:
             self.stdout.write(self.style.NOTICE('No reviews were found with the given criteria'))
         for r in reviews:
@@ -28,4 +28,4 @@ class Command(BaseCommand):
 
             self.stdout.write(self.style.SUCCESS(f'Analyzed review for {r.vendor} with id {r.id}'))
             self.stdout.write(self.style.NOTICE('Sleeping for 2 seconds'))
-            time.sleep(2)
+            time.sleep(1)
