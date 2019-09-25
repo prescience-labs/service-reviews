@@ -17,7 +17,7 @@ class ProductAdmin(admin.ModelAdmin):
 admin.site.register(Product, ProductAdmin)
 
 class ReviewAdmin(admin.ModelAdmin):
-    list_display    = ('created_at', 'vendor_link', 'transaction_link', 'product_link',)
+    list_display    = ('created_at', 'vendor_link',)
     list_filter     = ('created_at',)
     search_fields   = ('id', 'vendor__name', 'transaction__customer_email', 'transaction__customer_phone', 'product__name',)
     readonly_fields = ('id', 'analytics_id', 'sentiment_analysis', 'created_at', 'updated_at',)
@@ -25,14 +25,6 @@ class ReviewAdmin(admin.ModelAdmin):
     def vendor_link(self, obj):
         return mark_safe(f'<a href="{reverse("admin:common_vendor_change", args=(obj.vendor.pk,))}">{obj.vendor}</a>')
     vendor_link.short_description = 'vendor'
-
-    def transaction_link(self, obj):
-        return mark_safe(f'<a href="{reverse("admin:common_transaction_change", args=(obj.transaction.pk,))}">{obj.transaction}</a>')
-    transaction_link.short_description = 'transaction'
-
-    def product_link(self, obj):
-        return mark_safe(f'<a href="{reverse("admin:common_product_change", args=(obj.product.pk,))}">{obj.product}</a>')
-    product_link.short_description = 'product'
 admin.site.register(Review, ReviewAdmin)
 
 class TransactionAdmin(admin.ModelAdmin):
