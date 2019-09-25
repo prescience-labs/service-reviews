@@ -27,5 +27,5 @@ class Command(BaseCommand):
             r.save()
 
             self.stdout.write(self.style.SUCCESS(f'Analyzed review for {r.vendor} with id {r.id}'))
-            self.stdout.write(self.style.NOTICE('Sleeping for 2 seconds'))
+            self.stdout.write(self.style.NOTICE('Sleeping for 1 second'))
             time.sleep(1)
