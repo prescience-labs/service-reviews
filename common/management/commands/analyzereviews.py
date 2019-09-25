@@ -14,7 +14,7 @@ class Command(BaseCommand):
         reviews = Review.objects.filter(
             Q(sentiment_analysis__isnull=True)
             | Q(analytics_id__isnull=True)
-        )
+        )[:1750]
         if len(reviews) is 0:
             self.stdout.write(self.style.NOTICE('No reviews were found with the given criteria'))
         for r in reviews:
