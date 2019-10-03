@@ -11,7 +11,7 @@ class Command(BaseCommand):
     help = "Sends the first review request for all transactions that haven't sent a review request"
 
     def handle(self, *args, **options):
-        transactions = Transaction.objects.filter(review_requests_sent=0).exclude(customer_email__exact='').exclude(customer_email__isnull=True)
+        transactions = Transaction.objects.filter(review_requests_sent=0).exclude(customer_email__exact='').exclude(customer_email__isnull=True).exclude(vendor__send_comms_to_customers=False)
         if len(transactions) is 0:
             self.stdout.write(self.style.NOTICE('No transactions were found with the given criteria'))
         for t in transactions:
