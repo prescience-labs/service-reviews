@@ -40,8 +40,8 @@ class TransactionAdmin(admin.ModelAdmin):
 admin.site.register(Transaction, TransactionAdmin)
 
 class VendorAdmin(admin.ModelAdmin):
-    list_display    = ('__str__', 'integrations_type', 'integrations_id',)
-    list_filter     = ('integrations_type',)
+    list_display    = ('__str__', 'integrations_type', 'integrations_id', 'send_comms_to_customers',)
+    list_filter     = ('integrations_type', 'send_comms_to_customers',)
     search_fields   = ('id', 'name', 'integrations_type', 'integrations_id',)
     readonly_fields = ('id', 'created_at', 'updated_at',)
     inlines         = [
