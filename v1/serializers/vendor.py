@@ -28,6 +28,7 @@ class VendorProductSerializer(serializers.ModelSerializer):
         fields              = [
             'id',
             'name',
+            'team_id',
             'vendor_product_id',
             'created_at',
             'updated_at',

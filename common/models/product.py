@@ -7,6 +7,7 @@ from common.models import Vendor
 
 class Product(BaseModel, models.Model):
     name        = models.CharField(max_length=255)
+    team_id     = models.CharField(max_length=255, help_text=_('The ID of the team that owns this product'))
     vendors     = models.ManyToManyField(Vendor, through='Inventory')
     created_at  = models.DateTimeField(auto_now_add=True, editable=False)
     updated_at  = models.DateTimeField(auto_now=True, editable=False)

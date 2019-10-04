@@ -6,12 +6,7 @@ from common.models import Inventory, Product, Vendor
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model               = Product
-        fields              = [
-            'id',
-            'name',
-            'created_at',
-            'updated_at',
-        ]
+        fields              = '__all__'
         read_only_fields    = [
             'id',
             'created_at',
@@ -31,6 +26,7 @@ class ProductVendorSerializer(serializers.ModelSerializer):
         fields              = [
             'id',
             'name',
+            'team_id',
             'vendor_product_id',
             'integrations_type',
             'integrations_id',
