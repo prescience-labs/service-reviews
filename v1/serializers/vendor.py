@@ -48,7 +48,7 @@ class VendorSerializer(serializers.ModelSerializer):
         return vendor
 
 class VendorProductSerializer(serializers.ModelSerializer):
-    vendor_product_id = serializers.SerializerMethodField(help_text=_("A value representing the vendor's ID number for the product."))
+    vendor_product_id = serializers.CharField(help_text=_("A value representing the vendor's ID number for the product."), write_only=True)
 
     class Meta:
         model               = Product
@@ -62,6 +62,7 @@ class VendorProductSerializer(serializers.ModelSerializer):
         ]
         read_only_fields    = [
             'id',
+            'team_id',
             'created_at',
             'updated_at',
         ]
@@ -81,4 +82,21 @@ class VendorProductSerializer(serializers.ModelSerializer):
         return item.vendor_product_id
 
     def create(self, validated_data):
-        return super().create(validated_data)
+        try:
+            logger.debug(f'Validated data: {validated_data}')
+            vendor_id   = self.context.get('vendor_id', None)
+            vendor      = Vendor.objects.get_or_none(pk=vendor_id)
+            if not vendor:
+                raise serializers.ValidationError(f"A vendor with id {vendor_id} could not be found.")
+
+            vendor_product_id = validated_data.get('vendor_product_id', None)
+            if not vendor_product_id:
+                raise serializers.ValidationError("Somehow the `vendor_product_id` wasn't included in the request. Try adding that in the body.")
+
+            product     = Product.objects.create(name=validated_data['name'], team_id=vendor.team_id)
+            inventory   = Inventory.objects.create(product=product, vendor=vendor, vendor_product_id=vendor_product_id)
+            return product
+        except serializers.ValidationError as error:
+            raise serializers.ValidationError(error.detail)
+        except:
+            raise serializers.ValidationError("We weren't able to fulfill this request. Please try it again. If this keeps happening, give us a call.", code=500)

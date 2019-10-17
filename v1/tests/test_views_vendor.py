@@ -53,7 +53,7 @@ class VendorListViewTests(TestCase):
         self.assertContains(request, 'name', status_code=400)
 
     def test_post_vendor_no_team_id(self):
-        """Should return a clean 400 error and helpful text"""
+        """Should return a 201 and create the team for me"""
         test_vendor_name                = 'Test Vendor'
         test_vendor_integrations_type   = 'test_type'
         test_vendor_integrations_id     = str(uuid4())
@@ -62,7 +62,7 @@ class VendorListViewTests(TestCase):
             'integrations_type': test_vendor_integrations_type,
             'integrations_id': test_vendor_integrations_id,
         })
-        self.assertContains(request, 'team_id', status_code=400)
+        self.assertContains(request, 'team_id', status_code=201)
 
     def test_post_vendor_no_integrations_type(self):
         """Should still create the object with a 201"""
@@ -110,12 +110,14 @@ class VendorListViewTests(TestCase):
         self.assertContains(request, 'name', status_code=400)
 
     def test_post_vendor_products_without_team_id(self):
-        """Should return a 400 and contain helpful information"""
+        """Should return a 201 and use the vendor's team id"""
         request = self.client.post(f'{BASE_URL}/{self.vendor.id}/products', {
             'name': 'Test vendor',
             'vendor_product_id': '3201',
         })
-        self.assertContains(request, 'team_id', status_code=400)
+        print(request.json())
+        self.assertContains(request, 'team_id', status_code=201)
+        self.assertEqual(request.json()['team_id'], self.vendor.team_id)
 
     def test_post_vendor_products_without_vendor_product_id(self):
         """Should return a 400 and contain helpful information"""
