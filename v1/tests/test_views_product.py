@@ -10,8 +10,8 @@ BASE_URL = '/v1/products'
 class ProductListViewTests(TestCase):
     def setUp(self):
         self.client     = APIClient()
-        self.product    = Product.objects.create(name='Test Product')
-        self.team_id    = uuid4()
+        self.team_id    = str(uuid4())
+        self.product    = Product.objects.create(name='Test Product', team_id=self.team_id)
 
     def test_no_products(self):
         """Ensures that an empty response (no data existing) looks as expected"""
@@ -57,20 +57,26 @@ class ProductListViewTests(TestCase):
         """Should return a 201"""
         request = self.client.post(f'{BASE_URL}/{self.product.id}/vendors', {
             'name': 'Test Vendor',
-            'team_id': self.team_id,
             'vendor_product_id': 'abcdef',
             'integrations_type': 'amazon',
             'integrations_id': '1772661',
         })
+        print('===========================')
+        print('===========================')
+        print('===========================')
+        print(request.json())
+        print('===========================')
+        print('===========================')
+        print('===========================')
         self.assertContains(request, 'Test Vendor', status_code=201)
         self.assertContains(request, 'amazon', status_code=201)
         self.assertContains(request, '1772661', status_code=201)
+        self.assertEqual(request.json()['team_id'], self.team_id)
 
     def test_post_product_vendor_without_integrations_type(self):
         """Should return a 201"""
         request = self.client.post(f'{BASE_URL}/{self.product.id}/vendors', {
             'name': 'Test Vendor',
-            'team_id': self.team_id,
             'vendor_product_id': 'abcdef',
             'integrations_id': '1772661',
         })
@@ -81,7 +87,6 @@ class ProductListViewTests(TestCase):
         """Should return a 201"""
         request = self.client.post(f'{BASE_URL}/{self.product.id}/vendors', {
             'name': 'Test Vendor',
-            'team_id': self.team_id,
             'vendor_product_id': 'abcdef',
             'integrations_type': 'amazon',
         })
@@ -91,7 +96,6 @@ class ProductListViewTests(TestCase):
     def test_post_product_vendor_without_name(self):
         """Should return a 400 and contain helpful information"""
         request = self.client.post(f'{BASE_URL}/{self.product.id}/vendors', {
-            'team_id': self.team_id,
             'vendor_product_id': '3201',
         })
         self.assertContains(request, 'name', status_code=400)
@@ -100,7 +104,6 @@ class ProductListViewTests(TestCase):
         """Should return a 400 and contain helpful information"""
         request = self.client.post(f'{BASE_URL}/{self.product.id}/vendors', {
             'name': 'Test Vendor',
-            'team_id': self.team_id,
         })
         self.assertContains(request, 'vendor_product_id', status_code=400)
 
@@ -108,15 +111,15 @@ class ProductListViewTests(TestCase):
         """Should return a 400 and contain helpful information"""
         request = self.client.post(f'{BASE_URL}/{uuid4()}/vendors', {
             'name': 'Test Vendor',
-            'team_id': self.team_id,
             'vendor_product_id': 'abcdef',
         })
         self.assertContains(request, 'product', status_code=400)
 
     def test_post_product_vendor_without_team_id(self):
-        """Should return a 400 and contain helpful information"""
+        """Should return a 201 and use the product's team id"""
         request = self.client.post(f'{BASE_URL}/{self.product.id}/vendors', {
             'name': 'Test Vendor',
             'vendor_product_id': 'abcdef',
         })
-        self.assertContains(request, 'team_id', status_code=400)
+        self.assertContains(request, 'team_id', status_code=201)
+        self.assertEqual(request.json()['team_id'], self.product.team_id)

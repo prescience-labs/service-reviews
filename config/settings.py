@@ -182,3 +182,6 @@ MAILER_SERVICE = {
     'FROM_EMAIL':           os.getenv('MAILER_SERVICE_FROM_EMAIL', 'postmaster@mg.altamir.io'),
     'DEFAULT_DELAY_DAYS':   int(os.getenv('MAILER_SERVICE_DEFAULT_DELAY_DAYS', 0 if DEBUG else 7)),
 }
+AUTH_SERVICE = {
+    'BASE_URL': os.getenv('AUTH_SERVICE_BASE_URL'),
+}
