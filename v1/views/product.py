@@ -2,13 +2,14 @@ from django_filters import rest_framework as filters
 from rest_framework import generics, serializers, status
 from rest_framework.response import Response
 
-from common.models import Inventory, Product, Vendor
+from common.models import Inventory, Product, Review, Vendor
 from v1.serializers import (
     ProductSerializer,
     ProductVendorSerializer,
+    ProductReviewSerializer,
     VendorSerializer,
 )
-from ._filters import ProductFilter, VendorFilter
+from ._filters import ProductFilter, ReviewFilter, VendorFilter
 
 class ProductList(generics.ListCreateAPIView):
     """All products"""
@@ -29,6 +30,21 @@ class ProductVendorList(generics.ListCreateAPIView):
     def get_queryset(self):
         product_id = self.kwargs['pk']
         return Vendor.objects.filter(product__id=product_id)
+
+    def get_serializer_context(self):
+        return {
+            'request': self.request,
+            'product_id': self.kwargs['pk'],
+        }
+
+class ProductReviewList(generics.ListAPIView):
+    """The reviews for a specific product"""
+    serializer_class    = ProductReviewSerializer
+    filterset_class     = ReviewFilter
+
+    def get_queryset(self):
+        product_id = self.kwargs['pk']
+        return Review.objects.filter(product__id=product_id)
 
     def get_serializer_context(self):
         return {
