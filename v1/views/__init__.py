@@ -1,3 +1,4 @@
+from .absa_event import ABSAEventList
 from .product import (
     ProductList,
     ProductDetail,

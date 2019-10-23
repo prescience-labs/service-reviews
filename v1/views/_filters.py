@@ -1,7 +1,14 @@
 from django.utils.translation import gettext_lazy as _
 from django_filters import rest_framework as filters
 
-from common.models import Product, Review, Vendor
+from common.models import ABSAEvent, Product, Review, Vendor
+
+class ABSAEventFilter(filters.FilterSet):
+    before      = filters.DateFilter(field_name='created_at', lookup_expr='lte', help_text=_('**Exclusive** created before date (YYYY-MM-DD)'))
+    after       = filters.DateFilter(field_name='created_at', lookup_expr='gte', help_text=_('**Inclusive** created after date (YYYY-MM-DD)'))
+    term        = filters.CharFilter(field_name='term', lookup_expr='icontains', help_text=_('Case-insensitive fuzzy `term` search'))
+    variant     = filters.CharFilter(field_name='variant', lookup_expr='icontains', help_text=_('Case-insensitive fuzzy `variant` search'))
+    event_type  = filters.CharFilter(field_name='event_type', lookup_expr='exact', help_text=_('Exact event type'))
 
 class ProductFilter(filters.FilterSet):
     before                  = filters.DateFilter(field_name='created_at', lookup_expr='lte', help_text=_('**Exclusive** created before date (YYYY-MM-DD)'))

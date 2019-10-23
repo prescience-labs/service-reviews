@@ -1,3 +1,4 @@
+from .absa_event import ABSAEventSerializer
 from .product import (
     ProductSerializer,
     ProductVendorSerializer,
