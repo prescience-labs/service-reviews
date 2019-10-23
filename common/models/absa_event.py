@@ -24,3 +24,7 @@ class ABSAEvent(BaseModel):
         help_text=_('The polarity score between -1 and 1'),
     )
     review      = models.ForeignKey(Review, on_delete=models.CASCADE)
+    team_id     = models.CharField(max_length=255, help_text=_('The ID of the team that owns this event'))
+
+    def __str__(self):
+        return f'{self.term} ({self.variant})'

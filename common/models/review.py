@@ -26,8 +26,6 @@ class Review(BaseModel):
     rating_max          = models.PositiveSmallIntegerField(blank=True, null=True, help_text=_('The max possible review rating, if it was included'))
     analytics_id        = models.UUIDField(blank=True, null=True, help_text=_(f'The document id from the <a href="{settings.DOCUMENTS_SERVICE["BASE_URL"]}">Documents Service</a>'))
     sentiment_analysis  = JSONField(blank=True, null=True, help_text=_('The sentiment analysis from the document service'))
-    created_at          = models.DateTimeField(auto_now_add=True, editable=False)
-    updated_at          = models.DateTimeField(auto_now=True, editable=False)
 
     class Meta:
         unique_together = [
@@ -50,3 +48,6 @@ class Review(BaseModel):
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         self.full_clean()
         return super().save(force_insert=force_insert, force_update=force_update, using=using, update_fields=update_fields)
+
+    def __str__(self):
+        return self.text[:75] + (self.text[75:] and '...')

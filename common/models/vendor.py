@@ -10,8 +10,6 @@ class Vendor(BaseModel):
     integrations_type       = models.CharField(max_length=1000, blank=True, null=True, help_text=_('Set by the integrations service to uniquely identify a vendor'))
     integrations_id         = models.CharField(max_length=1000, blank=True, null=True, help_text=_('Set by the integrations service to uniquely identify a vendor'))
     send_comms_to_customers = models.BooleanField(default=False, help_text=_("A flag for sending texts, emails, etc to this vendor's customers (e.g. review requests)"))
-    created_at              = models.DateTimeField(auto_now_add=True, editable=False)
-    updated_at              = models.DateTimeField(auto_now=True, editable=False)
 
     @property
     def products(self):
