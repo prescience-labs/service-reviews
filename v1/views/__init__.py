@@ -1,3 +1,4 @@
+from .absa_event import ABSAEventList
 from .product import (
     ProductList,
     ProductDetail,
@@ -7,6 +8,7 @@ from .product import (
 from .review import (
     ReviewList,
     ReviewDetail,
+    ReviewABSAEventList,
 )
 from .transaction import (
     TransactionList,
