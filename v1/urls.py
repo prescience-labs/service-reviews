@@ -11,6 +11,7 @@ urlpatterns = [
 
     path('/reviews', views.ReviewList.as_view(), name='review_list'),
     path('/reviews/<str:pk>', views.ReviewDetail.as_view(), name='review_detail'),
+    path('/reviews/<str:pk>/absa-events', views.ReviewABSAEventList.as_view(), name='review_absa_event_list'),
 
     path('/transactions', views.TransactionList.as_view(), name='transaction_list'),
     path('/transactions/comprehensive', views.UpsertTransactionComprehensive.as_view(), name='transaction_comprehensive'),
