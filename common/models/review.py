@@ -5,9 +5,13 @@ from django.db import models
 from django.db.models import ObjectDoesNotExist
 from django.utils.translation import gettext_lazy as _
 
-from common.models import BaseModel, Inventory, Product, Transaction, Vendor
+from ._base import BaseModel
+from .inventory import Inventory
+from .product import Product
+from .transaction import Transaction
+from .vendor import Vendor
 
-class Review(BaseModel, models.Model):
+class Review(BaseModel):
     """
     Review
         - MUST be associated with a Vendor

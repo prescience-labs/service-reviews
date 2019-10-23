@@ -6,10 +6,12 @@ from django.db.models.signals import m2m_changed
 from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as _
 
-from common.models import BaseModel
-from common.models import Inventory, Product, Vendor
+from ._base import BaseModel
+from .inventory import Inventory
+from .product import Product
+from .vendor import Vendor
 
-class Transaction(BaseModel, models.Model):
+class Transaction(BaseModel):
     vendor                  = models.ForeignKey(Vendor, on_delete=models.CASCADE)
     vendor_transaction_id   = models.CharField(max_length=1000, help_text=_("The vendor's unique identifier for this transaction"))
     products                = models.ManyToManyField(Product)

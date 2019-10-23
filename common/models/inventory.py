@@ -1,9 +1,11 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from common.models import BaseModel, Product, Vendor
+from ._base import BaseModel
+from .product import Product
+from .vendor import Vendor
 
-class Inventory(BaseModel, models.Model):
+class Inventory(BaseModel):
     """The many-to-many connection between Vendor and Products.
 
     A Vendor can sell multiple products, and each product can be sold by

@@ -2,9 +2,9 @@ from django.conf import settings
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from common.models import BaseModel
+from ._base import BaseModel
 
-class Vendor(BaseModel, models.Model):
+class Vendor(BaseModel):
     name                    = models.CharField(max_length=255)
     team_id                 = models.CharField(max_length=255, help_text=_('The ID of the team that owns this vendor'))
     integrations_type       = models.CharField(max_length=1000, blank=True, null=True, help_text=_('Set by the integrations service to uniquely identify a vendor'))
