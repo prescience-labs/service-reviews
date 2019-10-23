@@ -3,7 +3,7 @@ import logging
 from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 
-from common.models import Inventory, Product, Vendor
+from common.models import Inventory, Product, Review, Vendor
 
 logger = logging.getLogger(__name__)
 
@@ -69,3 +69,14 @@ class ProductVendorSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(error.detail)
         except:
             raise serializers.ValidationError("We weren't able to fulfill this request. Please try it again. If this keeps happening, give us a call.", code=500)
+
+class ProductReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model               = Review
+        fields              = '__all__'
+        read_only_fields    = [
+            'sentiment_analysis',
+            'analytics_id',
+            'created_at',
+            'updated_at',
+        ]

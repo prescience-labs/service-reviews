@@ -6,18 +6,18 @@ from django.db.models.signals import m2m_changed
 from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as _
 
-from common.models import BaseModel
-from common.models import Inventory, Product, Vendor
+from ._base import BaseModel
+from .inventory import Inventory
+from .product import Product
+from .vendor import Vendor
 
-class Transaction(BaseModel, models.Model):
+class Transaction(BaseModel):
     vendor                  = models.ForeignKey(Vendor, on_delete=models.CASCADE)
     vendor_transaction_id   = models.CharField(max_length=1000, help_text=_("The vendor's unique identifier for this transaction"))
     products                = models.ManyToManyField(Product)
     customer_email          = models.CharField(max_length=500, blank=True, null=True)
     customer_phone          = models.CharField(max_length=50, blank=True, null=True)
     review_requests_sent    = models.PositiveSmallIntegerField(default=0, help_text=_("The number of review requests we've sent to the customer regarding this transaction"))
-    created_at              = models.DateTimeField(auto_now_add=True, editable=False)
-    updated_at              = models.DateTimeField(auto_now=True, editable=False)
 
     @property
     def customer_contact(self):

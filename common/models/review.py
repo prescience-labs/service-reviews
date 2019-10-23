@@ -5,9 +5,13 @@ from django.db import models
 from django.db.models import ObjectDoesNotExist
 from django.utils.translation import gettext_lazy as _
 
-from common.models import BaseModel, Inventory, Product, Transaction, Vendor
+from ._base import BaseModel
+from .inventory import Inventory
+from .product import Product
+from .transaction import Transaction
+from .vendor import Vendor
 
-class Review(BaseModel, models.Model):
+class Review(BaseModel):
     """
     Review
         - MUST be associated with a Vendor
@@ -22,8 +26,6 @@ class Review(BaseModel, models.Model):
     rating_max          = models.PositiveSmallIntegerField(blank=True, null=True, help_text=_('The max possible review rating, if it was included'))
     analytics_id        = models.UUIDField(blank=True, null=True, help_text=_(f'The document id from the <a href="{settings.DOCUMENTS_SERVICE["BASE_URL"]}">Documents Service</a>'))
     sentiment_analysis  = JSONField(blank=True, null=True, help_text=_('The sentiment analysis from the document service'))
-    created_at          = models.DateTimeField(auto_now_add=True, editable=False)
-    updated_at          = models.DateTimeField(auto_now=True, editable=False)
 
     class Meta:
         unique_together = [
@@ -46,3 +48,6 @@ class Review(BaseModel, models.Model):
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         self.full_clean()
         return super().save(force_insert=force_insert, force_update=force_update, using=using, update_fields=update_fields)
+
+    def __str__(self):
+        return self.text[:75] + (self.text[75:] and '...')
