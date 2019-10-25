@@ -1,11 +1,15 @@
 from uuid import uuid4
 
+from django.conf import settings
 from django.test import TestCase
 from rest_framework.test import APIClient
 
 from common.models import Inventory, Product, Transaction, Vendor
 
 BASE_URL = '/v1/transactions'
+headers  = {
+    'HTTP_Authorization': 'Basic ' + settings.AUTH_SERVICE['CLIENT_ID'] + ':' + settings.AUTH_SERVICE['CLIENT_SECRET'],
+}
 
 class TransactionListViewTests(TestCase):
     def setUp(self):
@@ -13,7 +17,7 @@ class TransactionListViewTests(TestCase):
 
     def test_no_transactions(self):
         """Ensures that an empty response (no data existing) looks as expected"""
-        request         = self.client.get(BASE_URL)
+        request         = self.client.get(BASE_URL, **headers)
         expected_result = {
             'count': 0,
             'next': None,
@@ -61,7 +65,7 @@ class UpsertTransactionComprehensiveViewTests(TestCase):
             'vendor_product_ids': [
                 self.vendor_product_id,
             ],
-        })
+        }, **headers)
         self.assertEqual(request.status_code, 201)
 
     def test_post_transaction_comprehensive_with_multiple_products(self):
@@ -76,7 +80,7 @@ class UpsertTransactionComprehensiveViewTests(TestCase):
                 self.vendor_product_id,
                 self.vendor_product_id_2,
             ],
-        })
+        }, **headers)
         self.assertEqual(request.status_code, 201)
 
     def test_post_transaction_comprehensive_without_customer_email(self):
@@ -90,7 +94,7 @@ class UpsertTransactionComprehensiveViewTests(TestCase):
             'vendor_product_ids': [
                 self.vendor_product_id,
             ],
-        })
+        }, **headers)
         self.assertEqual(request.status_code, 201)
 
     def test_post_transaction_comprehensive_with_invalid_customer_email(self):
@@ -104,7 +108,7 @@ class UpsertTransactionComprehensiveViewTests(TestCase):
             'vendor_product_ids': [
                 self.vendor_product_id,
             ],
-        })
+        }, **headers)
         self.assertEqual(request.status_code, 400)
 
     def test_post_transaction_comprehensive_without_customer_phone(self):
@@ -118,7 +122,7 @@ class UpsertTransactionComprehensiveViewTests(TestCase):
             'vendor_product_ids': [
                 self.vendor_product_id,
             ],
-        })
+        }, **headers)
         self.assertEqual(request.status_code, 201)
 
     def test_post_transaction_comprehensive_without_customer_information(self):
@@ -132,7 +136,7 @@ class UpsertTransactionComprehensiveViewTests(TestCase):
             'vendor_product_ids': [
                 self.vendor_product_id,
             ],
-        })
+        }, **headers)
         self.assertContains(request, 'customer_email', status_code=400)
         self.assertContains(request, 'customer_phone', status_code=400)
 
@@ -147,7 +151,7 @@ class UpsertTransactionComprehensiveViewTests(TestCase):
             'vendor_product_ids': [
                 self.vendor_product_id,
             ],
-        })
+        }, **headers)
         self.assertContains(request, 'vendor_integrations_type', status_code=400)
 
     def test_post_transaction_comprehensive_without_vendor_integrations_id(self):
@@ -161,7 +165,7 @@ class UpsertTransactionComprehensiveViewTests(TestCase):
             'vendor_product_ids': [
                 self.vendor_product_id,
             ],
-        })
+        }, **headers)
         self.assertContains(request, 'vendor_integrations_id', status_code=400)
 
     def test_post_transaction_comprehensive_without_vendor_product_ids(self):
@@ -175,7 +179,7 @@ class UpsertTransactionComprehensiveViewTests(TestCase):
             # 'vendor_product_ids': [
             #     self.vendor_product_id,
             # ],
-        })
+        }, **headers)
         self.assertContains(request, 'vendor_product_ids', status_code=400)
 
     def test_post_transaction_comprehensive_with_invalid_vendor_integrations_type(self):
@@ -189,7 +193,7 @@ class UpsertTransactionComprehensiveViewTests(TestCase):
             'vendor_product_ids': [
                 self.vendor_product_id,
             ],
-        })
+        }, **headers)
         self.assertContains(request, 'integrations_type', status_code=400)
 
     def test_post_transaction_comprehensive_with_invalid_vendor_integrations_id(self):
@@ -203,7 +207,7 @@ class UpsertTransactionComprehensiveViewTests(TestCase):
             'vendor_product_ids': [
                 self.vendor_product_id,
             ],
-        })
+        }, **headers)
         self.assertContains(request, 'integrations_id', status_code=400)
 
     def test_post_transaction_comprehensive_with_invalid_vendor_product_ids(self):
@@ -218,7 +222,7 @@ class UpsertTransactionComprehensiveViewTests(TestCase):
                 'invalid_product_id_1',
                 'invalid_product_id_2',
             ],
-        })
+        }, **headers)
         self.assertContains(request, 'vendor_product_id', status_code=400)
 
     def test_post_transaction_fails_when_vendor_doesnt_have_product_in_inventory(self):
@@ -233,7 +237,7 @@ class UpsertTransactionComprehensiveViewTests(TestCase):
             'products': [
                 unrelated_product.id,
             ],
-        })
+        }, **headers)
         self.assertContains(request, self.vendor.name, status_code=400)
         self.assertContains(request, product_name, status_code=400)
 
@@ -249,7 +253,7 @@ class UpsertTransactionComprehensiveViewTests(TestCase):
             'vendor_product_ids': [
                 self.vendor_product_id,
             ],
-        })
+        }, **headers)
         transaction_count_after_one_post = Transaction.objects.count()
         request2 = self.client.post(BASE_URL + '/comprehensive', {
             'customer_email': self.customer_email,
@@ -260,7 +264,7 @@ class UpsertTransactionComprehensiveViewTests(TestCase):
             'vendor_product_ids': [
                 self.vendor_product_id,
             ],
-        })
+        }, **headers)
         transaction_count_after_two_posts = Transaction.objects.count()
         self.assertContains(request1, self.customer_email, status_code=201)
         self.assertContains(request2, self.customer_email, status_code=200)
@@ -279,7 +283,7 @@ class UpsertTransactionComprehensiveViewTests(TestCase):
             'vendor_product_ids': [
                 self.vendor_product_id,
             ],
-        })
+        }, **headers)
         transaction_count_after_one_post = Transaction.objects.count()
         request2 = self.client.post(BASE_URL + '/comprehensive', {
             'customer_email': self.customer_email,
@@ -290,7 +294,7 @@ class UpsertTransactionComprehensiveViewTests(TestCase):
             'vendor_product_ids': [
                 self.vendor_product_id,
             ],
-        })
+        }, **headers)
         transaction_count_after_two_posts = Transaction.objects.count()
         self.assertContains(request1, self.customer_email, status_code=201)
         self.assertContains(request2, self.customer_email, status_code=200)

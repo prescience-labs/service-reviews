@@ -75,8 +75,6 @@ class VendorProductSerializer(serializers.ModelSerializer):
         Returns:
             string: The vendor-product identifier
         """
-        print(self.args)
-        print(self.request.args)
         vendor_id   = self.context['vendor_id'] if self.context['vendor_id'] else None
         item        = Inventory.objects.get(vendor__id=vendor_id, product=obj)
         return item.vendor_product_id
