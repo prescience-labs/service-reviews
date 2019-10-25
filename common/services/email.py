@@ -12,9 +12,9 @@ class Email:
         """Create a new Email
 
         Args:
-            recipient (string): Should be of the type "email@example.com" or possibly "First Last <email@example.com>"
-            subject (string, optional): The subject of the email. Defaults to None.
-            content (string, optional): The content of the email. It will be sent as an HTML email, so sending HTML here is expected. Defaults to None.
+        - recipient (string): Should be of the type "email@example.com" or possibly "First Last <email@example.com>"
+        - subject (string, optional): The subject of the email. Defaults to None.
+        - content (string, optional): The content of the email. It will be sent as an HTML email, so sending HTML here is expected. Defaults to None.
         """
         self.recipient  = recipient
         self.subject    = subject
