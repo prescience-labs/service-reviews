@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from common.models import Review
+from common.models import Product, Review
 
 class ReviewSerializer(serializers.ModelSerializer):
     # Must set default=None on these because they are part of a unique_together constraint
@@ -17,3 +17,9 @@ class ReviewSerializer(serializers.ModelSerializer):
             'created_at',
             'updated_at',
         ]
+
+    def create(self, validated_data):
+        # Fix issue where creating a review for a product when passing in just a product ID
+        # errors. We need to use that product id to find the product.
+        validated_data['product'] = Product.objects.get_or_none(pk=validated_data['product']) if validated_data['product'] else None
+        return super().create(validated_data)
