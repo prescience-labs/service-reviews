@@ -156,6 +156,9 @@ logging.config.dictConfig({
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'v1.services.auth.AuthorizationHeaderAuthentication',
+    ],
     'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
@@ -184,4 +187,6 @@ MAILER_SERVICE = {
 }
 AUTH_SERVICE = {
     'BASE_URL': os.getenv('AUTH_SERVICE_BASE_URL'),
+    'CLIENT_ID': os.getenv('AUTH_SERVICE_CLIENT_ID'),
+    'CLIENT_SECRET': os.getenv('AUTH_SERVICE_CLIENT_SECRET'),
 }
