@@ -21,6 +21,7 @@ admin.site.register(Product, ProductAdmin)
 class ReviewAdmin(admin.ModelAdmin):
     list_display    = ('created_at', 'vendor_link',)
     list_filter     = ('created_at',)
+    ordering        = ('-created_at',)
     search_fields   = ('id', 'vendor__name', 'transaction__customer_email', 'transaction__customer_phone', 'product__name',)
     readonly_fields = base_readonly_fields + ('analytics_id', 'sentiment_analysis',)
 
@@ -32,6 +33,7 @@ admin.site.register(Review, ReviewAdmin)
 class TransactionAdmin(admin.ModelAdmin):
     list_display        = ('created_at', 'customer_contact', 'vendor_link',)
     list_filter         = ('review_requests_sent',)
+    ordering            = ('-created_at',)
     search_fields       = ('id', 'customer_email', 'customer_phone', 'products__name', 'vendor__id', 'vendor__name',)
     readonly_fields     = base_readonly_fields + ('review_requests_sent',)
     filter_horizontal   = ('products',)
