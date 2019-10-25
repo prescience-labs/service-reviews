@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from rest_framework import serializers
 
 from common.models import Product, Review, Transaction
@@ -19,8 +20,11 @@ class ReviewSerializer(serializers.ModelSerializer):
         ]
 
     def create(self, validated_data):
-        # Fix issue where creating a review for a product when passing in just a product ID
-        # errors. We need to use that product id to find the product.
-        validated_data['transaction']   = Transaction.objects.get_or_none(pk=validated_data['transaction'])if validated_data['transaction'] else None
-        validated_data['product']       = Product.objects.get_or_none(pk=validated_data['product']) if validated_data['product'] else None
-        return super().create(validated_data)
+        try:
+            # Fix issue where creating a review for a product when passing in just a product ID
+            # errors. We need to use that product id to find the product.
+            validated_data['transaction']   = Transaction.objects.get_or_none(pk=validated_data['transaction'])if validated_data['transaction'] else None
+            validated_data['product']       = Product.objects.get_or_none(pk=validated_data['product']) if validated_data['product'] else None
+            return super().create(validated_data)
+        except ValidationError as e:
+            raise serializers.ValidationError(e.messages)
