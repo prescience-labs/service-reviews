@@ -7,11 +7,13 @@ from v1.serializers import (
     TransactionSerializer,
     UpsertTransactionComprehensiveSerializer,
 )
+from ._filters import TransactionFilter
 
 class TransactionList(generics.ListCreateAPIView):
     """All transactions"""
     queryset            = Transaction.objects.all()
     serializer_class    = TransactionSerializer
+    filterset_class     = TransactionFilter
 
 class TransactionDetail(generics.RetrieveAPIView):
     """A specific transaction"""
