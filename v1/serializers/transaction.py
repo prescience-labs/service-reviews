@@ -58,13 +58,13 @@ class UpsertTransactionComprehensiveSerializer(serializers.ModelSerializer):
             'id',
             'vendor',
             'vendor_transaction_id',
+            'vendor_integrations_type',
+            'vendor_integrations_id',
+            'vendor_product_ids',
             'customer_email',
             'customer_phone',
             'created_at',
             'updated_at',
-            'vendor_integrations_type',
-            'vendor_integrations_id',
-            'vendor_product_ids',
         ]
         read_only_fields    = [
             'id',
