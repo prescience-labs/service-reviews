@@ -3,15 +3,18 @@ from rest_framework.response import Response
 
 from common.models import Product, Transaction
 from v1.serializers import (
+    ProductSerializer,
     TransactionProductSerializer,
     TransactionSerializer,
     UpsertTransactionComprehensiveSerializer,
 )
+from ._filters import ProductFilter, TransactionFilter
 
 class TransactionList(generics.ListCreateAPIView):
     """All transactions"""
     queryset            = Transaction.objects.all()
     serializer_class    = TransactionSerializer
+    filterset_class     = TransactionFilter
 
 class TransactionDetail(generics.RetrieveAPIView):
     """A specific transaction"""
@@ -20,13 +23,12 @@ class TransactionDetail(generics.RetrieveAPIView):
 
 class TransactionProductList(generics.ListAPIView):
     """All products that are related to the specified transaction"""
-    queryset            = Product.objects.all()
-    serializer_class    = TransactionProductSerializer
+    serializer_class    = ProductSerializer
+    filterset_class     = ProductFilter
 
-    def list(self, request, pk):
-        queryset    = Product.objects.filter(transaction__id=pk)
-        serializer  = TransactionProductSerializer(queryset, many=True, context={'vendor_id': pk})
-        return Response(serializer.data)
+    def get_queryset(self):
+        transaction_id = self.kwargs['pk']
+        return Product.objects.filter(transaction__id=transaction_id)
 
 class UpsertTransactionComprehensive(generics.CreateAPIView):
     """Allows creating/updating a transaction without knowledge of product or vendor IDs

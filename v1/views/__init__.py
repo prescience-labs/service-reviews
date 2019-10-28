@@ -4,6 +4,7 @@ from .product import (
     ProductDetail,
     ProductVendorList,
     ProductReviewList,
+    ProductTransactionList,
 )
 from .review import (
     ReviewList,
