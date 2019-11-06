@@ -190,3 +190,9 @@ AUTH_SERVICE = {
     'CLIENT_ID': os.getenv('AUTH_SERVICE_CLIENT_ID'),
     'CLIENT_SECRET': os.getenv('AUTH_SERVICE_CLIENT_SECRET'),
 }
+
+TESTING = {
+    'user_email': os.getenv('AUTH_TEST_USER_EMAIL'),
+    'user_password': os.getenv('AUTH_TEST_USER_PASSWORD'),
+    'team_id': os.getenv('AUTH_TEST_TEAM_ID'),
+}

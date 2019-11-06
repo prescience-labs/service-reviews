@@ -6,22 +6,23 @@ from v1.serializers import ABSAEventSerializer, ReviewSerializer
 from ._filters import ABSAEventFilter, ReviewFilter
 
 class ReviewList(generics.ListCreateAPIView):
-    """All reviews"""
-    # queryset            = Review.objects.all()
     serializer_class    = ReviewSerializer
     filterset_class     = ReviewFilter
 
     def get_queryset(self):
-        print('USER')
-        print(self.request.user)
-        print('AUTH')
-        print(self.request.auth)
-        return Review.objects.all()
+        if self.request.auth == 'user':
+            return Review.objects.filter(vendor__team_id=self.request.user.get('active_team'))
+        elif self.request.auth == 'client':
+            return Review.objects.all()
 
 class ReviewDetail(generics.RetrieveAPIView):
-    """A specific review"""
-    queryset            = Review.objects.all()
     serializer_class    = ReviewSerializer
+
+    def get_queryset(self):
+        if self.request.auth == 'user':
+            return Review.objects.filter(vendor__team_id=self.request.user.get('active_team'))
+        elif self.request.auth == 'client':
+            return Review.objects.all()
 
 class ReviewABSAEventList(generics.ListAPIView):
     serializer_class    = ABSAEventSerializer

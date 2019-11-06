@@ -13,15 +13,23 @@ from v1.serializers import (
 from ._filters import ProductFilter, ReviewFilter, TransactionFilter, VendorFilter
 
 class ProductList(generics.ListCreateAPIView):
-    """All products"""
-    queryset            = Product.objects.all()
     serializer_class    = ProductSerializer
     filterset_class     = ProductFilter
 
+    def get_queryset(self):
+        if self.request.auth == 'user':
+            return Product.objects.filter(team_id=self.request.user.get('active_team'))
+        elif self.request.auth == 'client':
+            return Product.objects.all()
+
 class ProductDetail(generics.RetrieveUpdateAPIView):
-    """A specific product"""
-    queryset            = Product.objects.all()
-    serializer_class    = ProductSerializer
+    serializer_class = ProductSerializer
+
+    def get_queryset(self):
+        if self.request.auth == 'user':
+            return Product.objects.filter(team_id=self.request.user.get('active_team'))
+        elif self.request.auth == 'client':
+            return Product.objects.all()
 
 class ProductVendorList(generics.ListCreateAPIView):
     """The vendors for a specific product"""

@@ -11,15 +11,23 @@ from v1.serializers import (
 from ._filters import ProductFilter, TransactionFilter
 
 class TransactionList(generics.ListCreateAPIView):
-    """All transactions"""
-    queryset            = Transaction.objects.all()
     serializer_class    = TransactionSerializer
     filterset_class     = TransactionFilter
 
+    def get_queryset(self):
+        if self.request.auth == 'user':
+            return Transaction.objects.filter(vendor__team_id=self.request.user.get('active_team'))
+        elif self.request.auth == 'client':
+            return Transaction.objects.all()
+
 class TransactionDetail(generics.RetrieveAPIView):
-    """A specific transaction"""
-    queryset            = Transaction.objects.all()
     serializer_class    = TransactionSerializer
+
+    def get_queryset(self):
+        if self.request.auth == 'user':
+            return Transaction.objects.filter(vendor__team_id=self.request.user.get('active_team'))
+        elif self.request.auth == 'client':
+            return Transaction.objects.all()
 
 class TransactionProductList(generics.ListAPIView):
     """All products that are related to the specified transaction"""
@@ -36,10 +44,10 @@ class UpsertTransactionComprehensive(generics.CreateAPIView):
     This POST request upserts (update or insert) the transaction.
 
     The user of this route must have knowledge of:
-        - `integrations_type`
-        - `integrations_id`
-        - `vendor_product_id` (one or more)
-        - `vendor_transaction_id`
+    - `integrations_type`
+    - `integrations_id`
+    - `vendor_product_id` (one or more)
+    - `vendor_transaction_id`
     """
     serializer_class = UpsertTransactionComprehensiveSerializer
 
